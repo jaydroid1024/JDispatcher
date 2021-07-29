@@ -1,6 +1,8 @@
 # JDispatcher
 Android 组件生命周期分发框架，适用于组件化，模块化，启动优化等场景
 
+![](https://raw.githubusercontent.com/jaydroid1024/jay_image_repo/main/img/20210729184216.png)
+
 
 ## 功能介绍
 
@@ -18,7 +20,7 @@ Android 组件生命周期分发框架，适用于组件化，模块化，启动
   - 只在debug模式下分发，实现 DevTools、DoKit 等开发工具的初始化
 - 维度值采用对整型 or/and 的位操作完成多维度值的收集与识别，灵活且高效
 - 支持初始化时批量传参，可用于多项目多环境的三方 sdk 的初始化，使环境配置更统一
-- 通过注解打点，APT 收集分发类，降低耦合，可用于模块化，组件化场景
+- 通过注解打点，APT 增量收集分发类，降低耦合，可用于模块化，组件化场景
 - 通过拦截 AGP 构建流程实现在编译期间对分发类的扫描和排序，提高运行时性能
 - AGP Transform 增量支持编译（todo）
 - 通过 ASM 字节码插桩实现分发表和 Application  生命周期回调方法的自动注入，集成更高效
@@ -201,4 +203,21 @@ public class DispatcherAppDemo extends DispatchTemplate {
 ```
 
 
+
+## Todo
+
+  - 支持通过非阻塞式异步通知机制实现异步加载与同步加载交叉使用的情况
+
+  - 通过 ContentProvider 实现在 Application 之前超前预加载
+
+  - AGP Transform 增量支持编译
+
+    
+
+## 参考
+
+- [ARouter](https://github.com/alibaba/ARouter/blob/master/README_CN.md) 是一个用于帮助 Android App 进行组件化改造的框架 —— 支持模块间的路由、通信、解耦
+
+- [AppInit](https://github.com/bingoogolapple/AppInit) 是一款 Android 应用初始化框架，基于组件化的设计思路，功能灵活，使用简单。
+- [*WMRouter*](https://github.com/meituan/WMRouter) 是一款Android路由框架，基于组件化的设计思路，有功能灵活、使用简单的特点
 
