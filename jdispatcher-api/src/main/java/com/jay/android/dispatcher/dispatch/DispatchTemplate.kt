@@ -14,7 +14,7 @@ import com.jay.android.dispatcher.common.IDispatch
  */
 abstract class DispatchTemplate : IDispatch {
 
-    protected val TAG: String = this.javaClass.simpleName
+    open val TAG: String = this.javaClass.simpleName
 
     abstract override fun onCreate(app: Application, dispatchItem: DispatchItem)
 

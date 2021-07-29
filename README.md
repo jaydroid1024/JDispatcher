@@ -1,37 +1,6 @@
 # JDispatcher
 Android 组件生命周期分发框架，适用于组件化，模块化，启动优化等场景
 
-## 最新版本
-
-[![](https://jitpack.io/v/jaydroid1024/JDispatcher.svg)](https://jitpack.io/#jaydroid1024/JDispatcher)
-
-```groovy
-//Step 1. Add the JitPack repository to your build file
-//buildscript & allprojects
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-//dependencies
-classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:1.0.0'
-
-//Step 2. Add the dependency
-implementation 'com.github.jaydroid1024.JDispatcher:jdispatcher-api:1.0.0'
-kapt 'com.github.jaydroid1024.JDispatcher:jdispatcher-compiler:1.0.0'
-
-//Step 3. apply the plugin and config dispatcher
-apply plugin: 'jdispatcher'
-dispatcher {
-    appCanonicalName = "com.jay.android.App"
-    buildIncremental = true
-    buildDebug = true
-}
-
-```
-
-
 
 ## 功能介绍
 
@@ -39,17 +8,20 @@ dispatcher {
 - 分发顺序支持多种规则
   - 优先级：优先级值越大越先被调用
   - 依赖项：组件依赖的分发类先初始化
+  - 支持自动校正在优先级和依赖项两种规则交叉使用情况下的分发顺序
 - 分发维度支持多种规则
   - 在指定进程(所有进程，主进程，非主进程)中分发
   - 在指定线程(主线程，空闲线程，工作线程)中分发，实现异步加载
+  - 支持通过非阻塞式异步通知机制实现异步加载与同步加载交叉使用的情况（todo）
   - 手动延迟调用分发，实现延迟加载
+  - 通过 ContentProvider 实现在 Application 之前超前预加载（todo）
   - 只在debug模式下分发，实现 DevTools、DoKit 等开发工具的初始化
 - 维度值采用对整型 or/and 的位操作完成多维度值的收集与识别，灵活且高效
-- 支持初始化时批量传参，可用于多项目多环境的三方 sdk 的初始化，环境配置更统一
-- 通过注解打点，APT 收集分发类，低耦合，可用于模块化，组件化场景
-- 通过拦截 AGP 构建流程实现在编译期间扫描和排序，提高运行时性能
-- 通过 ASM 字节码插桩实现分发表和 Application  生命周期方法的自动注入，集成更高效
-- 支持统计所有分发类的初始化时间，可用于启动优化排查
+- 支持初始化时批量传参，可用于多项目多环境的三方 sdk 的初始化，使环境配置更统一
+- 通过注解打点，APT 收集分发类，降低耦合，可用于模块化，组件化场景
+- 通过拦截 AGP 构建流程实现在编译期间对分发类的扫描和排序，提高运行时性能
+- 通过 ASM 字节码插桩实现分发表和 Application  生命周期回调方法的自动注入，集成更高效
+- 支持统计所有分发类的初始化时间，可用于启动优化的统计与排查
 
 
 
@@ -88,19 +60,88 @@ dispatcher {
 
 
 
+## 最新版本
+
+[![](https://jitpack.io/v/jaydroid1024/JDispatcher.svg)](https://jitpack.io/#jaydroid1024/JDispatcher)
+
+```groovy
+//Step 1. Add the JitPack repository to your build file
+//buildscript & allprojects
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+//dependencies
+classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:0.0.1'
+
+//Step 2. Add the dependency
+implementation 'com.github.jaydroid1024.JDispatcher:jdispatcher-api:0.0.1'
+kapt 'com.github.jaydroid1024.JDispatcher:jdispatcher-compiler:0.0.1'
+
+//Step 3. apply the plugin and config dispatcher
+apply plugin: 'jdispatcher'
+dispatcher {
+    appCanonicalName = "com.jay.android.App"
+    buildIncremental = true
+    buildDebug = true
+}
+
+```
+
+
+
 ## 使用说明
-
-
 
 ```kotlin
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        //初始化并自动分发
+        //为分发类指定自定义参数，用于三方key的统一收口配置
+        val dispatchExtraParam = HashMap<String, HashMap<String, String>>()
+        dispatchExtraParam["com.jay.android.jdispatcher.DispatcherAppDemo"] =
+            if (BuildConfig.DEBUG) hashMapOf(
+                Pair("key1", "value1_debug"),
+                Pair("key2", "value2_debug")
+            )
+            else hashMapOf(
+                Pair("key1", "value1_release"),
+                Pair("key2", "value2_release")
+            )
+
+        //自动分发
         JDispatcher.instance
-            .withDebugAble(true)
+            .withDebugAble(true)//调试模式：打印更多日志，实时刷新等
+            .withDispatchExtraParam(dispatchExtraParam)//分发参数
             .init(this)
     }
+  
+  
+// region如果在 app build.gradle 中配置了
+// dispatcher {appCanonicalName = "com.jay.android.App"}
+// 就不需要添加以下代码,dispatcher 插件会自动注入
+
+    override fun onTerminate() {
+        super.onTerminate()
+        JDispatcher.instance.onTerminate()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        JDispatcher.instance.onConfigurationChanged(newConfig)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        JDispatcher.instance.onLowMemory()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        JDispatcher.instance.onTrimMemory(level)
+    }
+//endregion
 }
 ```
 
@@ -114,9 +155,9 @@ JDispatcher.instance
 
 
 
+
 ```kotlin
 //声明分发类
-
 @Dispatch(priority = Priority.LOW_DEFAULT, description = "DispatcherAppDemo")
 public class DispatcherAppDemo extends DispatchTemplate {
 

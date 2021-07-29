@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Dispatch(name = "D_A_02",
         priority = 10,
-        description = "组件 A 的01个Dispatch change")
+        description = "组件 A 的01个Dispatch")
 public class Demo_Library_A_Dispatch_01 extends DispatchTemplate {
 
     @Override

@@ -1,4 +1,4 @@
-package com.jay.android.jdispatcher
+package com.jay.android
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.jay.android.dispatcher.common.CommonUtils
 import com.jay.android.dispatcher.launcher.JDispatcher
+import com.jay.android.jdispatcher.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,18 +17,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onInfo(view: View) {
-        //分发时携带的参数信息
-        val pushDispatchExtraParam = hashMapOf<String, HashMap<String, String>>()
-        val pushExtraParam = hashMapOf<String, String>()
-        if (BuildConfig.DEBUG) {
-            pushExtraParam["push_key"] = "111232323"
-        } else {
-            pushExtraParam["push_key"] = "33333333"
-        }
-        pushDispatchExtraParam["DemoLibrary_B_Dispatch_03"] = pushExtraParam
-
         //手动调用分发
-        JDispatcher.instance
-            .manualDispatch("DemoLibrary_B_Dispatch_03")
+        JDispatcher.instance.manualDispatch("D_B_03")
     }
 }
