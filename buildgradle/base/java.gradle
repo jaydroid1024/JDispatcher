@@ -17,5 +17,5 @@ compileKotlin {
 
 
 dependencies {
-    implementation rootProject.ext.kotlinStdlibJdk8
+
 }

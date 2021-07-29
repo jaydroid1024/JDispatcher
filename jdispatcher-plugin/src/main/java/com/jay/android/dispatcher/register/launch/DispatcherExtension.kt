@@ -11,8 +11,14 @@ open class DispatcherExtension {
     var appCanonicalName: String = ""
 
     // 是否是增量编译，开启增量编译可以优化编译时间
-    var buildIncremental: Boolean = true
+    var buildIncremental: Boolean = false
 
     // 是否是调试模式，调试模式可打印更多的调试日志
     var buildDebug: Boolean = false
+
+    override fun toString(): String {
+        return "DispatcherExtension(appCanonicalName='$appCanonicalName', buildIncremental=$buildIncremental, buildDebug=$buildDebug)"
+    }
+
+
 }

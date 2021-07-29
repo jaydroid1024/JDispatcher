@@ -20,6 +20,7 @@ Android 组件生命周期分发框架，适用于组件化，模块化，启动
 - 支持初始化时批量传参，可用于多项目多环境的三方 sdk 的初始化，使环境配置更统一
 - 通过注解打点，APT 收集分发类，降低耦合，可用于模块化，组件化场景
 - 通过拦截 AGP 构建流程实现在编译期间对分发类的扫描和排序，提高运行时性能
+- AGP Transform 增量支持编译（todo）
 - 通过 ASM 字节码插桩实现分发表和 Application  生命周期回调方法的自动注入，集成更高效
 - 支持统计所有分发类的初始化时间，可用于启动优化的统计与排查
 
@@ -190,4 +191,14 @@ public class DispatcherAppDemo extends DispatchTemplate {
     }
 }
 ```
+
+
+
+```groovy
+#Jdispatcher 混淆配置
+-keep public class com.jay.android.dispatcher.**{*;}
+-keep class * implements com.jay.android.dispatcher.common.IDispatch{*;}
+```
+
+
 

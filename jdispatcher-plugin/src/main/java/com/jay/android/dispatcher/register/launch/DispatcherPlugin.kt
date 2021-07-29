@@ -1,8 +1,8 @@
 package com.jay.android.dispatcher.register.launch
 
 import com.android.build.gradle.AppExtension
+import com.jay.android.dispatcher.common.Logger
 import com.jay.android.dispatcher.register.transform.transform.DispatcherTransform
- import com.jay.android.dispatcher.common.Logger
 import com.jay.android.dispatcher.register.utils.PluginConst
 import com.jay.android.dispatcher.register.utils.PluginUtils
 import org.gradle.api.Plugin
@@ -31,25 +31,18 @@ import org.gradle.api.Project
 open class DispatcherPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        Logger.debug("=====>apply project: $project<=====")
+        Logger.setTag(PluginConst.TAG)
+        Logger.debug("apply project: $project")
         if (PluginUtils.isApp(project)) {
             //注册 Extension
             project.extensions.create(
                 PluginConst.DISPATCHER_EXTENSION_NAME,
                 DispatcherExtension::class.java
             )
-
             //注册 Transform
             val android = project.extensions.getByType(AppExtension::class.java)
             val transformImpl = DispatcherTransform(project)
             android.registerTransform(transformImpl)
-
-            project.afterEvaluate {
-                val e: DispatcherExtension =
-                    project.extensions.getByName(PluginConst.DISPATCHER_EXTENSION_NAME) as DispatcherExtension
-                Logger.info(e.appCanonicalName)
-            }
-
         }
     }
 }

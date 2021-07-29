@@ -19,34 +19,6 @@
             </intent-filter>
         </activity>
 
-
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
-            <meta-data
-                android:name="com.jay.android.LitePalInitializer"
-                android:value="androidx.startup" />
-
-            <meta-data
-                android:name="com.jay.android.OtherInitializer"
-                android:value="androidx.startup" />
-
-            <!--
-            这里在LitePalInitializer的meta-data当中加入了一个tools:node="remove"的标记。
-            这个标记用于告诉manifest merger tool，在最后打包成APK时，
-            将所有android:name是com.example.LitePalInitializer的meta-data节点全部删除。
-            这样，LitePal库在自己的AndroidManifest.xml中配置的Initializer也会被删除，
-            既然删除了，App Startup在启动的时候肯定就无法初始化它了。
-                    -->
-            <!--            <meta-data-->
-            <!--                android:name="com.jay.android.OtherInitializer"-->
-            <!--                tools:node="remove" />-->
-
-        </provider>
-
-
     </application>
 
 </manifest>

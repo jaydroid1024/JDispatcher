@@ -215,7 +215,7 @@ class JDispatcher private constructor() {
      * 分发入口
      */
     private fun dispatch() {
-        if (!hasInit || application == null || Warehouse.isDispatchListEmpty()) {
+        if (!hasInit || application == null) {
             throw RuntimeException("JDispatcher.init(context) first!")
         }
         if (dispatchHelper == null) {

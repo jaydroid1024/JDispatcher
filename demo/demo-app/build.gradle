@@ -4,7 +4,7 @@ apply from: "../../buildgradle/base/app.gradle"
 apply plugin: 'jdispatcher'
 dispatcher {
     appCanonicalName = "com.jay.android.App"
-    buildIncremental = true
+    buildIncremental = false //todo 增量编译还有问题
     buildDebug = true
 }
 

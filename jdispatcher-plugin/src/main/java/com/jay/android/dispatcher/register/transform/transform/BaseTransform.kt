@@ -61,12 +61,13 @@ open class BaseTransform(val project: Project) : Transform() {
     }
 
     open fun afterTransform() {
-
+        Logger.debug("afterTransform...")
+        Logger.debug("dispatcherExtension" + dispatcherExtension.toString())
 
     }
 
     open fun beforeTransform() {
-
+        Logger.debug("beforeTransform...")
 
     }
 
@@ -77,7 +78,6 @@ open class BaseTransform(val project: Project) : Transform() {
     private fun setLogger(extension: DispatcherExtension) {
         Logger.showLog(extension.buildDebug)
         Logger.showStackTrace(extension.buildDebug)
-        Logger.setTag(PluginConst.TAG)
     }
 
 

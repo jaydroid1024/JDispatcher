@@ -67,7 +67,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation rootProject.ext.kotlinStdlibJdk8
     implementation rootProject.ext.appcompat
     implementation rootProject.ext.coreKtx
 

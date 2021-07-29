@@ -5,20 +5,20 @@ buildscript {
     repositories {
         mavenCentral()
         google()
-        maven { url rootProject.ext.jdispatcherLocalRepo }
-        maven { url "https://jitpack.io" }
+        //仓库类型控制开关
+        def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
+        if (currentMavenRepositoryTypeIsDev) {
+            maven { url rootProject.ext.jdispatcherLocalRepo }
+        } else {
+            maven { url "https://jitpack.io" }
+        }
     }
     dependencies {
         classpath rootProject.ext.androidGradle
         classpath rootProject.ext.mavenGradlePlugin
         classpath rootProject.ext.arouterRegister
         classpath rootProject.ext.kotlinGradlePlugin
-        def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
-        if (dependenceTypeIsModule) {
-            classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:1.0.0'
-        } else {
-            classpath rootProject.ext.jdispatcherPlugin
-        }
+        classpath rootProject.ext.jdispatcherPlugin
 
     }
 }
@@ -27,8 +27,12 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-        maven { url rootProject.ext.jdispatcherLocalRepo }
-        maven { url "https://jitpack.io" }
+        def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
+        if (currentMavenRepositoryTypeIsDev) {
+            maven { url rootProject.ext.jdispatcherLocalRepo }
+        } else {
+            maven { url "https://jitpack.io" }
+        }
     }
 }
 

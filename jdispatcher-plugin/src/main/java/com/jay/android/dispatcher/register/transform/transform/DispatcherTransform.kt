@@ -79,7 +79,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
         logInfo["transform_total_time"] = time("transform ") {
             try {
                 logInfo["scan_time"] = time("scan ") {
-                    //扫描 jar&aar ,过滤需要的文件
+                    //扫描 jar&aar 过滤需要的文件
                     scan(invocation)
                 }
                 logInfo["handle_time"] = time("handle ") {
@@ -108,6 +108,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
      * 处理字节码
      */
     private fun handle() {
+
         //处理 JDispatcher
         if (jDispatcherClassName.isNullOrEmpty() || jDispatcherClassFile?.exists() == false) {
             throw  IllegalStateException("未找到： ${PluginConst.CLASS_OF_JDISPATCHER}")

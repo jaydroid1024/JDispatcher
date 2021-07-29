@@ -161,9 +161,7 @@ public class DispatchProcessor extends BaseProcessor {
   private TypeSpec createClassWithMethod(MethodSpec method, Set<? extends Element> elements) {
     String hash = null;
     for (Element element : elements) {
-      info(">>> createClassWithMethod hash:" + element + " <<<");
       hash = AptUtils.getHash(element);
-      info(">>> createClassWithMethod hash:" + hash + " <<<");
       if (hash != null) {
         break;
       }
