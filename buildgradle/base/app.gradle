@@ -1,0 +1,102 @@
+//****************************************
+//******  公共 app 壳 gradle配置  **********
+//****************************************
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.alibaba.arouter'
+
+
+android {
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+
+        applicationId rootProject.ext.applicationId
+
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        //Instrumentation Test class
+        testInstrumentationRunner rootProject.ext.androidJUnitRunner
+
+        javaCompileOptions {
+            //用于配置 Java 注释处理器的选项。
+//            annotationProcessorOptions {
+//                arguments = [
+//                        AROUTER_MODULE_NAME : project.getName(),
+//                        AROUTER_GENERATE_DOC: "enable",
+//                ]
+//            }
+
+            kapt {
+                arguments {
+                    arg("AROUTER_MODULE_NAME", project.getName())
+                }
+            }
+        }
+
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias rootProject.ext.sign["aliasDebug"]
+            keyPassword rootProject.ext.sign["passDebug"]
+            storeFile rootProject.ext.sign["storeDebug"]
+            storePassword rootProject.ext.sign["storePassDebug"]
+        }
+        release {
+            keyAlias rootProject.ext.sign["alias"]
+            keyPassword rootProject.ext.sign["pass"]
+            storeFile rootProject.ext.sign["store"]
+            storePassword rootProject.ext.sign["storePass"]
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+
+    compileOptions {
+        targetCompatibility rootProject.ext.javaTargetCompatibility
+        sourceCompatibility rootProject.ext.javaSourceCompatibility
+    }
+
+    kotlinOptions {
+        jvmTarget = rootProject.ext.kotlinOptionsJvmTarget
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation rootProject.ext.kotlinStdlibJdk8
+    implementation rootProject.ext.appcompat
+    implementation rootProject.ext.coreKtx
+    implementation rootProject.ext.design
+
+    implementation rootProject.ext.arouterApi
+    kapt rootProject.ext.arouterCompiler
+
+
+}

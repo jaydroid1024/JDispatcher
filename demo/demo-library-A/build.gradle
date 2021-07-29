@@ -1,0 +1,14 @@
+apply from: "../../buildgradle/base/lib.gradle"
+
+dependencies {
+
+    def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+    if (dependenceTypeIsModule) {
+        implementation project(':jdispatcher-api')
+        kapt project(':jdispatcher-compiler')
+    } else {
+        implementation rootProject.ext.jdispatcherApi
+        kapt rootProject.ext.jdispatcherCompiler
+    }
+
+}

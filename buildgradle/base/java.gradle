@@ -1,0 +1,21 @@
+//****************************************
+//******  公共 java lib gradle 配置  **********
+//****************************************
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+java {
+    targetCompatibility = rootProject.ext.javaTargetCompatibility
+    sourceCompatibility = rootProject.ext.javaSourceCompatibility
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = rootProject.ext.kotlinOptionsJvmTarget
+    }
+}
+
+
+dependencies {
+    implementation rootProject.ext.kotlinStdlibJdk8
+}

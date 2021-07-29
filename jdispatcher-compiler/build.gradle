@@ -1,0 +1,19 @@
+apply from: "../buildgradle/base/java.gradle"
+apply from: "../buildgradle/maven/publish.gradle"
+
+dependencies {
+    def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+    if (dependenceTypeIsModule) {
+        implementation project(':jdispatcher-annotation')
+    } else {
+        implementation rootProject.ext.jdispatcherAnnotation
+    }
+    compileOnly rootProject.ext.autoServiceAnnotations
+    annotationProcessor rootProject.ext.autoService
+    annotationProcessor rootProject.ext.incap
+    compileOnly rootProject.ext.incap
+    annotationProcessor rootProject.ext.incapProcessor
+    implementation rootProject.ext.javapoet
+    implementation rootProject.ext.kotlinpoet
+
+}

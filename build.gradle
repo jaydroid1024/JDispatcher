@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    //使用 config.gradle 统一管理项目的依赖库,依赖仓库，Gradle 自身依赖（classpath）等
+    apply from: "buildgradle/config.gradle"
+    repositories {
+        mavenCentral()
+        google()
+        maven { url rootProject.ext.jdispatcherLocalRepo }
+        maven { url "https://jitpack.io" }
+    }
+    dependencies {
+        classpath rootProject.ext.androidGradle
+        classpath rootProject.ext.mavenGradlePlugin
+        classpath rootProject.ext.arouterRegister
+        classpath rootProject.ext.kotlinGradlePlugin
+        def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+        if (dependenceTypeIsModule) {
+            classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:1.0.0'
+        } else {
+            classpath rootProject.ext.jdispatcherPlugin
+        }
+
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        maven { url rootProject.ext.jdispatcherLocalRepo }
+        maven { url "https://jitpack.io" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

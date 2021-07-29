@@ -1,0 +1,29 @@
+apply from: "../../buildgradle/base/app.gradle"
+
+//配置 jdispatcher 插件
+apply plugin: 'jdispatcher'
+dispatcher {
+    appCanonicalName = "com.jay.android.App"
+    buildIncremental = true
+    buildDebug = true
+}
+
+
+dependencies {
+
+    implementation project(':demo:demo-library-A')
+    implementation project(':demo:demo-library-B')
+    implementation "androidx.startup:startup-runtime:1.0.0"
+    implementation rootProject.ext.tracing
+
+    def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+    if (dependenceTypeIsModule) {
+        implementation project(':jdispatcher-api')
+        kapt project(':jdispatcher-compiler')
+    } else {
+        implementation rootProject.ext.jdispatcherApi
+        kapt rootProject.ext.jdispatcherCompiler
+    }
+
+
+}

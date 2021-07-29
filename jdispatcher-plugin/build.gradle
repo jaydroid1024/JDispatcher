@@ -1,0 +1,32 @@
+apply plugin: 'groovy'
+apply from: "../buildgradle/base/java.gradle"
+apply from: "../buildgradle/maven/publish.gradle"
+
+//声明依赖的包
+dependencies {
+    //使用项目中指定的gradle wrapper版本，插件中使用的Project对象等等就来自这里
+    implementation gradleApi()
+    //使用本地的groovy
+    implementation localGroovy()
+    //Android编译的大部分gradle源码，比如上面讲到的TaskManager
+    implementation rootProject.ext.androidGradle
+    //这个依赖里其实主要存了transform的依赖，注意，这个依赖不同于上面的gradleApi()
+    implementation rootProject.ext.androidGradleApi
+    compileOnly rootProject.ext.android
+    implementation rootProject.ext.asm
+    implementation rootProject.ext.asmUtil
+    implementation rootProject.ext.asmCommons
+    def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+    if (dependenceTypeIsModule) {
+        implementation project(':jdispatcher-annotation')
+    } else {
+        implementation rootProject.ext.jdispatcherAnnotation
+    }
+
+}
+
+
+// 发布命令行：./gradle :jdispatcher-plugin:uploadArchives
+//将 buildSrc 模块复制到 jdispatcher-plugin 模块中
+//命令行指令：cp -rf buildSrc jdispatcher-plugin
+

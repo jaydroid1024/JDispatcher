@@ -1,0 +1,12 @@
+apply from: "../buildgradle/base/api.gradle"
+apply from: "../buildgradle/maven/publish.gradle"
+
+dependencies {
+    def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
+    if (dependenceTypeIsModule) {
+        api project(':jdispatcher-annotation')
+    } else {
+        api rootProject.ext.jdispatcherAnnotation
+    }
+    implementation rootProject.ext.tracing
+}

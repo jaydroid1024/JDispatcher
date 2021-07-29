@@ -1,0 +1,208 @@
+println("--------${project.name}：Maven Publish Gradle--------")
+//仓库类型控制开关
+def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
+if (!currentMavenRepositoryTypeIsDev) {
+    apply plugin: 'com.github.dcendents.android-maven'
+    group = rootProject.ext.jdispatcherJitpackGroup
+    return
+}
+
+apply plugin: 'maven'
+
+//远程Maven仓库的URL Release
+def MAVEN_REPO_RELEASE_URL = rootProject.ext.mavenRepo['mavenRepoUrlRelease']
+//远程Maven仓库用户名
+def USER_NAME = rootProject.ext.mavenRepo['userName']
+//远程Maven仓库密码
+def PASSWORD = rootProject.ext.mavenRepo['password']
+// 唯一标识 每个组件都要指定
+def GROUP = rootProject.ext.jdispatcherJitpackGroup
+// 项目名称 根据包名取最后的路径名称
+def ARTIFACT_ID = project.name
+// 版本号 每个组件都要指定
+def VERSION = rootProject.ext.jdispatcherVersion
+//远程Maven仓库的URL
+def URL = MAVEN_REPO_RELEASE_URL
+
+println("dependencies_path: $GROUP:$ARTIFACT_ID:$VERSION")
+println("URL: $URL")
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: rootProject.ext.jdispatcherLocalRepo) {
+                authentication(userName: USER_NAME, password: PASSWORD)
+            }
+            // 唯一标识
+            pom.groupId = GROUP
+            // 项目名称
+            pom.artifactId = ARTIFACT_ID
+            // 版本号
+            pom.version = VERSION
+        }
+    }
+}
+
+
+//todo Caused by: org.gradle.api.InvalidUserDataException: Maven publication 'release' cannot include multiple components
+
+// Because the components are created only during the afterEvaluate phase, you must
+// configure your publications using the afterEvaluate() lifecycle method.
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            // Creates a Maven publication called "release".
+//            release(MavenPublication) {
+//                // Applies the component for the release build variant.
+//                from components.release
+//
+//                // You can then customize attributes of the publication as shown below.
+//                groupId = GROUP
+//                artifactId = ARTIFACT_ID
+//                version = VERSION
+//            }
+//            // Creates a Maven publication called “debug”.
+//            debug(MavenPublication) {
+//                // Applies the component for the debug build variant.
+//                from components.debug
+//
+//                groupId = GROUP
+//                artifactId = ARTIFACT_ID
+//                version = VERSION
+//            }
+//        }
+//    }
+//}
+
+
+//todo 解决任务task已存在的问题
+
+// 上传到公共仓库
+//task uploadToPublic(type: Upload) {
+//    println("=+++++++++++++++++++VERSION: uploadToPublic")
+//    group = 'upload'
+//    configuration = configurations.archives
+//    uploadDescriptor = true
+//    repositories {
+//        mavenDeployer {
+//            // 指定maven仓库url
+//            repository(url: URL) {
+//                // Nexus私服的账户密码
+//                authentication(userName: USER_NAME, password: PASSWORD)
+//            }
+//            // 唯一标识
+//            pom.groupId = GROUP
+//            // 项目名称
+//            pom.artifactId = ARTIFACT_ID
+//            // 版本号
+//            pom.version = VERSION
+//        }
+//    }
+//}
+
+
+//// type显示指定任务类型或任务, 这里指定要执行Javadoc这个task,这个task在gradle中已经定义
+//androidJavadocs(type: Javadoc) {
+//    // 设置源码所在的位置
+//    source = android.sourceSets.main.java.sourceFiles
+//}
+//
+//// 生成javadoc.jar
+//androidJavadocsJar(type: Jar) {
+//    // 指定文档名称
+//    classifier = 'javadoc'
+//    from androidJavadocs.destinationDir
+//}
+//
+//// 打包main目录下代码和资源的task，生成sources.jar
+//androidSourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from android.sourceSets.main.java.sourceFiles
+//}
+//
+////配置需要上传到maven仓库的文件
+//artifacts {
+//    archives androidSourcesJar
+//    archives androidJavadocsJar
+//}
+
+
+//
+//// 打包源码
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    failOnError  false
+//    source = android.sourceSets.main.java.sourceFiles
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    classpath += configurations.compile
+//}
+//
+//
+//// 制作文档(Javadoc)
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+////配置需要上传到maven仓库的文件
+//artifacts {
+//    archives sourcesJar
+//    archives javadocJar
+//}
+
+
+//// 上传到公共仓库
+//task uploadToPublic(type: Upload) {
+//    group = 'upload'
+//    configuration = configurations.archives
+//    uploadDescriptor = true
+//    repositories{
+//        mavenDeployer {
+//            repository(url: URL_PUCBLIC) {
+//                authentication(userName: USERNAME, password: PASSWORD)
+//            }
+//            pom.version = VERSION
+//            pom.artifactId = ARTIFACT_ID
+//            pom.groupId = GROUP_ID
+//        }
+//    }
+//}
+
+//// 上传到本机仓库
+//task uploadToLocal(type: Upload) {
+//    group = 'upload'
+//    configuration = configurations.archives
+//    uploadDescriptor = true
+//    repositories{
+//        mavenDeployer {
+//            repository(url: URL_LOCAL) {
+//                authentication(userName: USERNAME, password: PASSWORD)
+//            }
+//            pom.version = VERSION
+//            pom.artifactId = ARTIFACT_ID
+//            pom.groupId = GROUP_ID
+//        }
+//    }
+//}
+//
+//// 压缩生成归档文件
+//task pack(type: Zip) {
+//    group = 'pack'
+//    archiveName = rootProject.getRootDir().getName() + "_v" + VERSION + ".zip";
+//    destinationDir = rootProject.getRootDir().getParentFile();
+//    from rootProject.getRootDir().getAbsolutePath();
+//    exclude '**.zip'
+//    exclude '**.iml'
+//    exclude '**/**.iml'
+//    exclude 'build/**'
+//    exclude '.idea/**'
+//    exclude '.gradle/**'
+//    exclude 'gradle/**'
+//    exclude '**/build/**'
+//}
+
+

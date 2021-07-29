@@ -1,0 +1,11 @@
+rootProject.name = "JDispatcher"
+//jdispatcher
+include ':jdispatcher-api'
+include ':jdispatcher-compiler'
+include ':jdispatcher-annotation'
+include ':jdispatcher-plugin'
+
+//demo
+include ':demo:demo-app'
+include ':demo:demo-library-B'
+include ':demo:demo-library-A'

@@ -1,0 +1,497 @@
+import groovy.json.JsonOutput
+
+ext {
+
+    android = [
+            compileSdkVersion = 30,
+            buildToolsVersion = '30.0.3',
+            minSdk = 21,
+            targetSdk = 30,
+            applicationId = "com.jay.android.jdispatcher",
+
+            versionCode = 1,
+            versionName = "1.0.0"
+    ]
+
+    java = [
+            javaSourceCompatibility = JavaVersion.VERSION_1_8,
+            javaTargetCompatibility = JavaVersion.VERSION_1_8
+    ]
+
+    kotlin = [
+            kotlinVersion = '1.4.32',
+            kotlinOptionsJvmTarget = '1.8'
+    ]
+
+
+    //仓库类型
+    // false: 远程仓库
+    // true: 本地仓库
+    def currentMavenRepositoryTypeIsDev = true
+
+    // 依赖类型
+    // true: 依赖module运行
+    // false: 依赖jar/aar运行
+    def dependenceTypeIsModule = true
+
+    dispatcher = [
+            jdispatcherVersion = '0.0.1',
+            jdispatcherLocalRepo = "file://" + project.rootDir + "/jdispatcher_plugin_repo",
+            jdispatcherJitpackGroup = "com.github.jaydroid1024.JDispatcher",
+            jdispatcherAnnotation = "$jdispatcherJitpackGroup:jdispatcher-annotation:$jdispatcherVersion",
+            jdispatcherPlugin = "$jdispatcherJitpackGroup:jdispatcher-plugin:$jdispatcherVersion",
+            jdispatcherApi = "$jdispatcherJitpackGroup:jdispatcher-api:$jdispatcherVersion",
+            jdispatcherCompiler = "$jdispatcherJitpackGroup:jdispatcher-compiler:$jdispatcherVersion"
+    ]
+
+    //三方依赖库多个依赖路径引入同一个版本号时需要提取版本号
+    versionArray = [
+            kotlinVersion = '1.4.32',
+            stethoVersion = '1.5.1',
+            retrofitVersion = '2.6.0',
+            okhttpVersion = '4.2.2',
+            glideVersion = '4.11.0',
+            chuckVersion = '1.1.0',
+            chuckerVersion = '3.2.0',
+            butterknifeVersion = '10.2.1',
+            immersionbarVersion = '3.0.0',
+            smartRefreshHeaderVersion = '1.0.5.1',
+            leakcanaryVersion = '1.1.2',
+            tinkerVersion = '1.9.14.6',
+            permissionsdispatcherVersion = '4.8.0',
+            aliPushVersion = '3.2.1',
+            autoServiceVersion = '1.0',
+            incapVersion = '0.3',
+            asmVersion = '7.1'
+    ]
+
+
+    dependencies = [
+
+            /** ========================================================= */
+            /** =================== android/androidX ==================== */
+            /** ========================================================= */
+
+            androidGradle = 'com.android.tools.build:gradle:4.2.2',
+            //这个依赖里其实主要存了transform的依赖，注意，这个依赖不同于上面的gradleApi()
+            androidGradleApi = 'com.android.tools.build:gradle-api:4.2.2',
+            android = 'com.google.android:android:4.1.1.4',
+            //appcompat
+            appcompat = 'androidx.appcompat:appcompat:1.2.0',
+            //core-Ktx
+            coreKtx = 'androidx.core:core-ktx:1.3.2',
+            //design
+            design = "com.google.android.material:material:1.3.0",
+            //constraintlayout
+            constraintLayout = 'androidx.constraintlayout:constraintlayout:2.0.4',
+            //recyclerview-v7
+            recyclerview = 'androidx.recyclerview:recyclerview:1.1.0',
+            //multidex
+            multidex = 'androidx.multidex:multidex:2.0.0',
+            //https://developer.android.com/topic/performance/tracing?hl=zh-cn
+            tracing = "androidx.tracing:tracing:1.0.0",
+
+            /** ========================================================= */
+            /** ======================== unit test ====================== */
+            /** ========================================================= */
+
+            //junit
+            junit = 'junit:junit:4.13.2',
+            //androidx-junit
+            junitX = 'androidx.test.ext:junit:1.1.2',
+            //androidx-espresso-core
+            espressoCore = 'androidx.test.espresso:espresso-core:3.3.0',
+            //AndroidJUnitRunner
+            androidJUnitRunner = "android.support.test.runner.AndroidJUnitRunner",
+
+
+            /** ========================================================= */
+            /** ========================= kotlin ======================== */
+            /** ========================================================= */
+            kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
+            //kotlin-stdlib-jdk7
+            kotlinStdlibJdk7 = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
+            //kotlin-stdlib-jdk8
+            kotlinStdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion",
+            //kotlin-reflect
+            kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+
+            /** ========================================================= */
+            /** ========================== tools ======================== */
+            /** ========================================================= */
+
+            mavenGradlePlugin = 'com.github.dcendents:android-maven-gradle-plugin:2.1',
+
+            //gson https://github.com/google/gson
+            gson = "com.google.code.gson:gson:2.8.5",
+
+            //arouter api https://github.com/alibaba/ARouter
+            arouterApi = "com.alibaba:arouter-api:1.5.2",
+            //arouter compiler
+            arouterCompiler = "com.alibaba:arouter-compiler:1.5.2",
+            //arouter-register
+            arouterRegister = "com.alibaba:arouter-register:1.0.2",
+
+            //stetho 调试工具 https://github.com/facebook/stetho
+            stetho = "com.facebook.stetho:stetho:$stethoVersion",
+            //stetho 网络调试 https://github.com/facebook/stetho
+            stethoOkhttp3 = "com.facebook.stetho:stetho-okhttp3:$stethoVersion",
+            //stetho 网络调试 https://github.com/facebook/stetho
+            stethoUrlconnection = "com.facebook.stetho:stetho-urlconnection:$stethoVersion",
+
+            //Chuck Okhttp日志打印工具 https://github.com/jgilfelt/chuck
+            chuckDebug = "com.readystatesoftware.chuck:library:$chuckVersion",
+            //Chuck Okhttp日志打印工具 https://github.com/jgilfelt/chuck
+            chuckRelease = "com.readystatesoftware.chuck:library-no-op:$chuckVersion",
+            //Chucker Okhttp日志和Android异常信息打印工具 https://github.com/ChuckerTeam/chucker
+            ChuckerDebug = "com.github.ChuckerTeam.Chucker:library:$chuckerVersion",
+            //Chucker Okhttp日志和Android异常信息打印工具 https://github.com/ChuckerTeam/chucker
+            ChuckerRelease = "com.github.ChuckerTeam.Chucker:library-no-op:$chuckerVersion",
+
+            //logger https://github.com/orhanobut/logger
+            logger = "com.orhanobut:logger:2.2.0",
+
+            //eventbus https://github.com/greenrobot/EventBus
+            eventbus = 'org.greenrobot:eventbus:3.2.0',
+
+            // matisse https://github.com/zhihu/Matisse
+            matisse = "com.zhihu.android:matisse:0.5.3-beta3",
+
+            //leakcanary
+            leakcanaryDebug = "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion",
+            leakcanaryRelease = "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion",
+
+            //图片压缩工具
+            luban = "top.zibin:Luban:1.1.8",
+
+            //auto-service
+            autoServiceAnnotations = "com.google.auto.service:auto-service-annotations:$autoServiceVersion",
+            autoService = "com.google.auto.service:auto-service:$autoServiceVersion",
+
+            // Generates the required META-INF descriptor to make the processor incremental.
+            incap = "net.ltgt.gradle.incap:incap:$incapVersion",
+            incapProcessor = "net.ltgt.gradle.incap:incap-processor:$incapVersion",
+
+            javapoet = 'com.squareup:javapoet:1.10.0',
+            kotlinpoet = 'com.squareup:kotlinpoet:1.8.0',
+
+
+            //ASM相关
+            asm = "org.ow2.asm:asm:$asmVersion",
+            asmUtil = "org.ow2.asm:asm-util:$asmVersion",
+            asmCommons = "org.ow2.asm:asm-commons:$asmVersion",
+
+
+            /** ========================================================= */
+            /** ========================= network ======================= */
+            /** ========================================================= */
+            //retrofit https://github.com/square/retrofit
+            retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion",
+            //retrofit converter-gson https://github.com/square/retrofit/blob/master/retrofit-converters/gson/README.md
+            retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion",
+            //retrofit adapter-rxjava https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2
+            retrofitAdapterRxjava = "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+            // Retrofit 同时支持多个 BaseUrl 以及动态改变 BaseUrl(已知问题：不同url 的https证书问题) https://github.com/JessYanCoding/RetrofitUrlManager
+            retrofitUrlManager = "me.jessyan:retrofit-url-manager:1.4.0",
+
+            //okhttp https://github.com/square/okhttp
+            okhttp = "com.squareup.okhttp3:okhttp:$okhttpVersion",
+            //okhttp logging-interceptor https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/README.md
+            okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion",
+            // PersistentCookieJar https://github.com/franmontiel/PersistentCookieJar
+            persistentcookiejar = "com.github.franmontiel:PersistentCookieJar:v1.0.1",
+
+            //rxjava https://github.com/ReactiveX/RxJava  todo rxjava:3.x.x
+            rxjava = 'io.reactivex.rxjava2:rxjava:2.2.10',
+            //rxandroid https://github.com/ReactiveX/RxAndroid todo rxandroid:3.x.x
+            rxandroid = 'io.reactivex.rxjava2:rxandroid:2.1.1',
+
+            //glide 图片加载 https://github.com/bumptech/glide
+            glide = "com.github.bumptech.glide:glide:$glideVersion",
+            //glide图片加载注解 https://github.com/bumptech/glide
+            glideAnnotationProcessor = "com.github.bumptech.glide:compiler:$glideVersion",
+            //Glide图片变换库
+            glideTransformations = 'jp.wasabeef:glide-transformations:4.0.1',
+
+
+            /** ========================================================= */
+            /** ======================= 三方服务/SDK ===================== */
+            /** ========================================================= */
+            //友盟基础组件（必须）
+            umCommon = 'com.umeng.umsdk:common:9.1.1',
+            umAsms = 'com.umeng.umsdk:asms:1.1.3',
+            umCrash = 'com.umeng.umsdk:crash:0.0.4',
+            umsdkUtdid = "com.umeng.umsdk:utdid:1.5.2",
+            //分享核心库
+            umShareCore = 'com.umeng.umsdk:share-core:7.0.3',
+            umShareBoard = 'com.umeng.umsdk:share-board:7.0.3',
+            umShareWX = 'com.umeng.umsdk:share-wx:7.0.3',
+
+            //七牛云
+            qiniu = 'com.qiniu:qiniu-android-sdk:7.5.0',
+
+            //微信不包含统计功能 （com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+包含统计功能）
+            wechat = 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+',
+
+            //mqtt client
+            mqttClient = 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5',
+            //mqtt service
+            mqttService = 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1',
+            // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.mqttv5.client
+            mqttv5Client = 'org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5',
+
+            //腾讯文件浏览服务
+            tbssdk = 'com.tencent.tbs.tbssdk:sdk:43967',
+
+            //阿里云推送服务
+            //接入文档：https://help.aliyun.com/document_detail/51056.html?spm=a2c4g.11186623.6.568.54e969a0jwQiMh#%E4%B8%80%E3%80%81Maven%E5%BA%93%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90(%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5)
+            //注：com.aliyun.ams:alicloud-android-push:3.2.1版本与com.aliyun.ams:alicloud-android-third-push:3.2.0版本匹配使用，两者需要同时升级
+            alicloudAndroidPush = "com.aliyun.ams:alicloud-android-push:3.2.2",
+            alicloudAndroidThirdPush = "com.aliyun.ams:alicloud-android-third-push:3.2.2@aar",
+            //Huawei依赖 同时在AndroidManifest文件中添加 appid
+            alicloudHuaweiPush = 'com.aliyun.ams:huawei-push:2.6.3.305',
+            alicloudHuaweiPushBase = 'com.aliyun.ams:huawei-push-base:2.6.3.305',
+            //小米依赖
+            alicloudMipush = 'com.xiaomi.mipush.sdk:mipush:3.7.9',
+            //OPPO依赖
+            alicloudOpush = 'com.aliyun.ams:opush:2.1.0-fix@aar',
+            //魅族依赖
+            alicloudMeizuPush = 'com.aliyun.ams:meizu-push:3.8.7.1',
+            //VIVO依赖 同时在AndroidManifest文件中添加 appKey,appID
+            alicloudThirdVivoPush = 'com.aliyun.ams:third_vivopush:2.9.0.1',
+            //谷歌依赖
+            alicloudFirebaseMessaging = 'com.google.firebase:firebase-messaging:17.6.0',
+
+            // 高德地图： https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project
+            //3D地图
+            amap3dmap = 'com.amap.api:3dmap:latest.integration',
+            //2D地图
+            amap2dmap = 'com.amap.api:map2d:latest.integration',
+            //导航
+            amapNavi3dmap = 'com.amap.api:navi-3dmap:latest.integration',
+            //搜索
+            amapSearch = 'com.amap.api:search:latest.integration',
+            //定位
+            amapLocation = 'com.amap.api:location:latest.integration',
+    ]
+
+
+    /** ========================================================= */
+    /** ========================= 签名信息 ======================= */
+    /** ========================================================= */
+    println("/* ========================签名信息======================= */")
+
+    //签名信息
+    def keyProps = getKeyProperties()
+    println("keyProps" + keyProps.toString())
+    sign = [
+            //debug sign
+            aliasDebug    : keyProps["aliasDebug"],
+            passDebug     : keyProps["passDebug"],
+            storeDebug    : file(keyProps["storeDebug"]),
+            storePassDebug: keyProps["storePassDebug"],
+            //release sign
+            alias         : keyProps["alias"],
+            pass          : keyProps["pass"],
+            store         : file(keyProps["store"]),
+            storePass     : keyProps["storePass"]
+    ]
+
+    /** ========================================================= */
+    /** ========================= 环境信息 ======================= */
+    /** ========================================================= */
+    println("\n/* ========================环境变量信息======================= */")
+
+    //环境类型统一定义在这里
+    propertyType = [
+            dev = "dev",
+            production = "production"
+    ]
+
+
+//    //todo 指定打包时的环境类型 local dev qa  production
+//    def currentPropertyType = dev
+//    println("currentPropertyType:${currentPropertyType}")
+//
+//    //debug模式可以指定任一环境类型
+//    def debugEnvironmentProps = getEnvironmentProperties(currentPropertyType)
+//    //release模式默认只采用正式环境
+//    def liveEnvironmentProps = getEnvironmentProperties(production)
+//    println("debugEnvironmentProps:$debugEnvironmentProps")
+//    println("liveEnvironmentProps:$liveEnvironmentProps")
+//    //获取测试环境到所哟数据
+//    def devEnvironmentProps = getEnvironmentProperties(dev)
+//    def qaEnvironmentProps = getEnvironmentProperties(qa)
+//    def localEnvironmentProps = getEnvironmentProperties(local)
+//    //将所有环境信息转成json保存到BuildConfig中用于环境动态切换
+//    def allEnvironmentList = new ArrayList<Properties>()
+//    allEnvironmentList.add(devEnvironmentProps)
+////    allEnvironmentList.add(qaEnvironmentProps)
+//    allEnvironmentList.add(localEnvironmentProps)
+//    //todo 正式环境在需要调试时才能添加
+//    allEnvironmentList.add(liveEnvironmentProps)
+//    println("allEnvironmentList:$allEnvironmentList")
+//    //将环境列表转为Json缓存到BuildConfig中
+//    def allEnvironmentJson = getAllEnvironmentJson(allEnvironmentList)
+//    println("allEnvironmentJson:$allEnvironmentJson")
+//    //将当前指定到环境转为Json缓存到BuildConfig中
+//    def debugEnvironmentJson = getAllEnvironmentJson(debugEnvironmentProps)
+//    println("debugEnvironmentJson:$debugEnvironmentJson")
+//    //将当前指定到环境转为Json缓存到BuildConfig中
+//    def releaseEnvironmentJson = getAllEnvironmentJson(liveEnvironmentProps)
+//    println("releaseEnvironmentJson:$releaseEnvironmentJson")
+
+//    environment = [
+//            // 测试环境 Properties dev local
+//            debugEnvironmentProps : debugEnvironmentProps,
+//            // 线上环境 Properties live
+//            liveEnvironmentProps  : liveEnvironmentProps,
+//            // 所有环境信息的json数据，切换环境时读取
+//            allEnvironmentJson    : allEnvironmentJson,
+//            // 打包时指定的环境类型
+//            currentPropertyType   : currentPropertyType,
+//            // 将当前指定到环境转为Json缓存到BuildConfig中
+//            debugEnvironmentJson  : debugEnvironmentJson,
+//            // 将当前指定到环境转为Json缓存到BuildConfig中
+//            releaseEnvironmentJson: releaseEnvironmentJson
+//    ]
+
+
+    /** ========================================================= */
+    /** ===================== 组件Maven仓库信息 =================== */
+    /** ========================================================= */
+
+
+
+    println("\n/* ========================组件Maven仓库信息======================= */")
+    println("dependenceTypeIsModule:${dependenceTypeIsModule.toString()}")
+    println("currentMavenRepositoryTypeIsDev:${currentMavenRepositoryTypeIsDev.toString()}")
+    //根据指定的仓库类型获取对应仓库地址
+    def mavenProps = getMavenProperties("dev")
+    if (currentMavenRepositoryTypeIsDev) {
+        mavenProps = getMavenProperties("dev")
+    } else {
+        mavenProps = getMavenProperties("production")
+    }
+    println("mavenProps" + mavenProps.toString())
+
+    mavenRepo = [
+            //依赖Maven组件类型的控制开关
+            dependenceTypeIsModule         : dependenceTypeIsModule,
+            currentMavenRepositoryTypeIsDev: currentMavenRepositoryTypeIsDev,
+            //remote-release
+            mavenRepoUrlRelease            : mavenProps["mavenRepoUrlRelease"],
+            //remote-snapshot
+            mavenRepoUrlSnapshots          : mavenProps["mavenRepoUrlSnapshots"],
+            //userName
+            userName                       : mavenProps["userName"],
+            //password
+            password                       : mavenProps["password"]
+    ]
+
+}
+
+
+/**
+ * 获取属性总配置文件 buildsystem/config.properties
+ * @return Properties实例 config
+ */
+Properties getConfigProperties() {
+    def CONFIG_PATH = "./buildsystem/config.properties"
+    return getProperties(CONFIG_PATH)
+}
+
+/**
+ * 获取属性配置文件公共方法
+ * @param propPath Properties配置文件路径
+ * @return Properties实例
+ */
+Properties getProperties(String propPath) {
+    Properties props = new Properties()
+    try {
+        InputStream inputStream = new FileInputStream(file(propPath))
+        //解决中文乱码问题
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+        props.load(bufferedReader)
+    } catch (IOException e) {
+        e.printStackTrace()
+    }
+    return props
+}
+
+/**
+ * 获取签名配置文件
+ * @return Properties实例  签名
+ */
+Properties getKeyProperties() {
+    Properties configProperties = getConfigProperties()
+    // 使用assert确保存在该属性否则报错，避免错误打包
+    assert configProperties['keystore.props.file']
+    return getProperties(configProperties.getProperty("keystore.props.file"))
+}
+
+/**
+ * 获取Maven仓库配置文件
+ * @return Properties实例  Maven
+ */
+Properties getMavenProperties() {
+    Properties configProperties = getConfigProperties()
+    // 使用assert确保存在该属性否则报错，避免错误打包
+    assert configProperties['maven.props.file']
+    return getProperties(configProperties.getProperty("maven.props.file"))
+}
+
+/**
+ * 根据环境类型获取环境配置文件
+ * @param propertyType 环境类型
+ * @return 该类型的所有属性信息
+ */
+Properties getMavenProperties(String propertyType) {
+    Properties localProperties = getConfigProperties()
+    String environmentPath = "${propertyType}.maven.props.file"
+    // 使用assert确保存在该属性否则报错，避免错误打包
+    assert localProperties[environmentPath]
+    return getProperties(localProperties.getProperty(environmentPath))
+
+}
+
+/**
+ * 获取当前指定的环境类型，缺省dev
+ * @return
+ */
+String getEnvironmentPropertyType() {
+    Properties localProperties = getConfigProperties()
+    return localProperties.getProperty("propertyType", "dev")
+}
+
+
+/**
+ * 根据环境类型获取环境配置文件
+ * @param propertyType 环境类型
+ * @return 该类型的所有属性信息
+ */
+Properties getEnvironmentProperties(String propertyType) {
+    Properties localProperties = getConfigProperties()
+    String environmentPath = "${propertyType}.props.file"
+    // 使用assert确保存在该属性否则报错，避免错误打包
+    assert localProperties[environmentPath]
+    return getProperties(localProperties.getProperty(environmentPath))
+
+}
+
+/**
+ * 将集合转为json 字符串
+ * @param allEnvironmentList
+ * @return
+ */
+static String getAllEnvironmentJson(Object allEnvironmentList) {
+    // 使用assert确保存在该属性否则报错，避免错误打包
+    assert allEnvironmentList
+    def jsonList = new JsonOutput().toJson(allEnvironmentList)
+    return jsonList.replaceAll("\"", "\\\\\"")
+}
+
+
+
+
+
