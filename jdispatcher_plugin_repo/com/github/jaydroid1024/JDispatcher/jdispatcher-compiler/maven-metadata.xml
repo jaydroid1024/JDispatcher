@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.github.jaydroid1024.JDispatcher</groupId>
+  <artifactId>jdispatcher-compiler</artifactId>
+  <versioning>
+    <release>0.0.1</release>
+    <versions>
+      <version>0.0.1</version>
+    </versions>
+    <lastUpdated>20210729032646</lastUpdated>
+  </versioning>
+</metadata>

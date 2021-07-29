@@ -27,12 +27,12 @@ ext {
     //仓库类型
     // false: 远程仓库
     // true: 本地仓库
-    def currentMavenRepositoryTypeIsDev = true
+    def currentMavenRepositoryTypeIsDev = false
 
     // 依赖类型
     // true: 依赖module运行
     // false: 依赖jar/aar运行
-    def dependenceTypeIsModule = true
+    def dependenceTypeIsModule = false
 
     dispatcher = [
             jdispatcherVersion = '0.0.1',

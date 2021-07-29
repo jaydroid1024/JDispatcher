@@ -22,7 +22,7 @@ def ARTIFACT_ID = project.name
 // 版本号 每个组件都要指定
 def VERSION = rootProject.ext.jdispatcherVersion
 //远程Maven仓库的URL
-def URL = MAVEN_REPO_RELEASE_URL
+def URL =  rootProject.ext.jdispatcherLocalRepo
 
 println("dependencies_path: $GROUP:$ARTIFACT_ID:$VERSION")
 println("URL: $URL")
