@@ -27,13 +27,13 @@ open class ApplicationClassVisitor(
         signature: String?,
         exceptions: Array<out String>?
     ): MethodVisitor {
-//        Logger.debug(
-//            "ApplicationClassVisitor : visit -----> started:"
-//                    + "-access:" + access
-//                    + "-name:" + name
-//                    + "-signature:" + signature
-//                    + "-exceptions:" + exceptions
-//        )
+        Logger.debug(
+            "ApplicationClassVisitor : visitMethod -----> started:"
+                    + "-access:" + access
+                    + "-name:" + name
+                    + "-signature:" + signature
+                    + "-exceptions:" + exceptions
+        )
         var mv = cv.visitMethod(access, name, descriptor, signature, exceptions)
 
         if (name == CommonConst.METHOD_ON_TERMINATE) {
@@ -63,6 +63,14 @@ open class ApplicationClassVisitor(
     }
 
     override fun visitEnd() {
+        Logger.debug(
+            "ApplicationClassVisitor : visitEnd ----->:" +
+                    "isHasTerminateMethod= $isHasTerminateMethod, " +
+                    "isHasConfigurationChangedMethod= $isHasConfigurationChangedMethod,  " +
+                    "isHasLowMemoryMethod= $isHasLowMemoryMethod,  " +
+                    "isHasTrimMemoryMethod= $isHasTrimMemoryMethod, "
+        )
+
         if (!isHasTerminateMethod) {
             ApplicationOnTerminateMethodVisitor.visitMethodOnNotExist(this)
         }

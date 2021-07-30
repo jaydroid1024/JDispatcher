@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.util.Log
 import com.jay.android.dispatcher.annotation.Dimension
 import com.jay.android.dispatcher.annotation.Dispatch
-import com.jay.android.dispatcher.annotation.Priority
 import com.jay.android.dispatcher.common.DispatchItem
 import com.jay.android.dispatcher.dispatch.DispatchTemplate
 
@@ -26,18 +25,18 @@ class DispatcherAppDemo : DispatchTemplate() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        Log.d(TAG, "DispatcherAppDemo#onConfigurationChanged$newConfig")
+        Log.d(TAG, "DispatcherAppDemo#onConfigurationChanged,newConfig=$newConfig")
     }
 
     override fun onLowMemory() {
-        Log.d(TAG,  "DispatcherAppDemo#onLowMemory")
+        Log.d(TAG, "DispatcherAppDemo#onLowMemory")
     }
 
     override fun onTerminate() {
-        Log.d(TAG,  "DispatcherAppDemo#onTerminate")
+        Log.d(TAG, "DispatcherAppDemo#onTerminate")
     }
 
     override fun onTrimMemory(level: Int) {
-        Log.d(TAG, "DispatcherAppDemo#onTrimMemory$level")
+        Log.d(TAG, "DispatcherAppDemo#onTrimMemory,level=$level")
     }
 }

@@ -63,9 +63,10 @@ Android 组件生命周期分发框架，适用于组件化，模块化，启动
 
 
 
-## 最新版本
+## 集成说明
 
 [![](https://jitpack.io/v/jaydroid1024/JDispatcher.svg)](https://jitpack.io/#jaydroid1024/JDispatcher)
+
 
 ```groovy
 //Step 1. Add the JitPack repository to your build file
@@ -77,17 +78,17 @@ allprojects {
     }
 }
 //dependencies
-classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:0.0.1'
+classpath 'com.github.jaydroid1024.JDispatcher:jdispatcher-plugin:$last_version'
 
 //Step 2. Add the dependency
-implementation 'com.github.jaydroid1024.JDispatcher:jdispatcher-api:0.0.1'
-kapt 'com.github.jaydroid1024.JDispatcher:jdispatcher-compiler:0.0.1'
+implementation 'com.github.jaydroid1024.JDispatcher:jdispatcher-api:$last_version'
+kapt 'com.github.jaydroid1024.JDispatcher:jdispatcher-compiler:$last_version'
 
 //Step 3. apply the plugin and config dispatcher
 apply plugin: 'jdispatcher'
 dispatcher {
     appCanonicalName = "com.jay.android.App"
-    buildIncremental = true
+    buildIncremental = false
     buildDebug = true
 }
 

@@ -15,6 +15,7 @@ dependencies {
     implementation project(':demo:demo-library-B')
     implementation "androidx.startup:startup-runtime:1.0.0"
     implementation rootProject.ext.tracing
+    implementation rootProject.ext.multidex
 
     def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
     if (dependenceTypeIsModule) {

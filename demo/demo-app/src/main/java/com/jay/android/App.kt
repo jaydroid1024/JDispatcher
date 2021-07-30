@@ -1,16 +1,17 @@
 package com.jay.android
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import com.jay.android.dispatcher.launcher.JDispatcher
 import com.jay.android.jdispatcher.BuildConfig
 import java.util.*
+
 
 /**
  * @author jaydroid
  * @version 1.0
  * @date 6/2/21
  */
-class App : Application() {
+class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
