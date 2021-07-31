@@ -3,7 +3,7 @@ apply from: "../../buildgradle/base/app.gradle"
 //配置 jdispatcher 插件
 apply plugin: 'jdispatcher'
 dispatcher {
-    appCanonicalName = "com.jay.android.App"
+    appCanonicalName = "com.jay.android.demo_library_a.App"
     buildIncremental = false //todo 增量编译还有问题
     buildDebug = true
 }

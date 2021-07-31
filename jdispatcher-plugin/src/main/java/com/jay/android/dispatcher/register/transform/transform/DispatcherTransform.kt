@@ -127,7 +127,6 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
         } else {
             modifyJarClass(applicationClassFile)
         }
-
     }
 
     fun modifyDirectoryClass(destDir: File?, className: String?) {
@@ -147,7 +146,9 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
     fun modifyDirectoryClass(inputStream: InputStream, className: String): ByteArray? {
         if (className == applicationClassName) {
             //  Application
-            return ASMHelper.modifyClass(inputStream) { ApplicationClassVisitor(it) }
+            return ASMHelper.modifyClass(inputStream) {
+                ApplicationClassVisitor(it)
+            }
         }
         return null
     }
@@ -157,6 +158,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
      * @param inputJarFile
      */
     private fun modifyJarClass(inputJarFile: File?) {
+        Logger.debug("modifyJarClass：inputJarFile: $inputJarFile ")
         if (inputJarFile == null || !inputJarFile.exists() || !inputJarFile.name.endsWith(".jar")) {
             return
         }
@@ -209,7 +211,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
                 JDispatcherClassVisitor(classWriter, dispatchSortedList!!)
             }
 
-        } else if (entryName == applicationClassName) {
+        } else if (checkClassName == applicationClassName) {
             // Application
             return ASMHelper.modifyClass(inputStream) { classWriter ->
                 ApplicationClassVisitor(classWriter)

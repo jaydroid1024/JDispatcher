@@ -11,4 +11,7 @@ dependencies {
         kapt rootProject.ext.jdispatcherCompiler
     }
 
+    implementation rootProject.ext.multidex
+
+
 }
