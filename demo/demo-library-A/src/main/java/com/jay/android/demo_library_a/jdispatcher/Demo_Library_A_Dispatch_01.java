@@ -18,6 +18,6 @@ public class Demo_Library_A_Dispatch_01 extends DispatchTemplate {
 
   @Override
   public void onCreate(@NotNull Application app, @NotNull DispatchItem dispatchItem) {
-    super.onCreate(app, dispatchItem);
+//    super.onCreate(app, dispatchItem);
   }
 }

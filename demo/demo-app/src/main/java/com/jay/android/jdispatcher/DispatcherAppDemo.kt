@@ -20,7 +20,7 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
 )
 class DispatcherAppDemo : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
-        super.onCreate(app, dispatchItem)
+//        super.onCreate(app, dispatchItem)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
