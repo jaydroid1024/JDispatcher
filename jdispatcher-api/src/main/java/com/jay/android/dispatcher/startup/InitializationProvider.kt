@@ -13,76 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.jay.android.dispatcher.startup
 
-package com.jay.android.dispatcher.startup;
-
-import android.app.Application;
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
+import android.content.ContentProvider
+import android.content.ContentValues
+import android.database.Cursor
+import android.net.Uri
+import androidx.annotation.RestrictTo
+import com.jay.android.dispatcher.launcher.JDispatcher
 
 /**
- * The {@link ContentProvider} which discovers {@link Initializer}s in an application and
- * initializes them before {@link Application#onCreate()}.
+ * The [ContentProvider] which discovers [Initializer]s in an application and
+ * initializes them before [Application.onCreate].
  *
- * @hide
+ * @author jaydroid
+ * @version 1.0
+ * @date 7/8/21
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-public final class InitializationProvider extends ContentProvider {
-    @Override
-    public boolean onCreate() {
-        Context context = getContext();
+class InitializationProvider : ContentProvider() {
+    override fun onCreate(): Boolean {
         if (context != null) {
-            AppInitializer.getInstance(context).discoverAndInitialize();
+            JDispatcher.instance.init(context)
         } else {
-            throw new StartupException("Context cannot be null");
+            throw StartupException("Context cannot be null")
         }
-        return true;
+        return true
     }
 
-    @Nullable
-    @Override
-    public Cursor query(
-            @NonNull Uri uri,
-            @Nullable String[] projection,
-            @Nullable String selection,
-            @Nullable String[] selectionArgs,
-            @Nullable String sortOrder) {
-        throw new IllegalStateException("Not allowed.");
+
+    override fun query(
+        uri: Uri,
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor? {
+        throw IllegalStateException("Not allowed.")
     }
 
-    @Nullable
-    @Override
-    public String getType(@NonNull Uri uri) {
-        throw new IllegalStateException("Not allowed.");
+    override fun getType(uri: Uri): String? {
+        throw IllegalStateException("Not allowed.")
     }
 
-    @Nullable
-    @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        throw new IllegalStateException("Not allowed.");
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+        throw IllegalStateException("Not allowed.")
     }
 
-    @Override
-    public int delete(
-            @NonNull Uri uri,
-            @Nullable String selection,
-            @Nullable String[] selectionArgs) {
-        throw new IllegalStateException("Not allowed.");
+    override fun delete(
+        uri: Uri, selection: String?, selectionArgs: Array<String>?
+    ): Int {
+        throw IllegalStateException("Not allowed.")
     }
 
-    @Override
-    public int update(
-            @NonNull Uri uri,
-            @Nullable ContentValues values,
-            @Nullable String selection,
-            @Nullable String[] selectionArgs) {
-        throw new IllegalStateException("Not allowed.");
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
+        throw IllegalStateException("Not allowed.")
     }
 }

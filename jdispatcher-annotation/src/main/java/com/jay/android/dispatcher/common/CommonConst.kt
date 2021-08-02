@@ -9,7 +9,7 @@ object CommonConst {
     const val PROJECT = "JDispatcher"
     const val SEPARATOR = "$$"
     const val DOT = "."
-    const val TAG = "$PROJECT::Common >>>> >>>> "
+    const val TAG = "$PROJECT::Common > "
     const val PACKAGE_OF_GENERATE_FILE = "com.jay.android.dispatcher.generate.dispatch"
     const val PACKAGE_OF_GENERATE_DOCS = "com.jay.android.dispatcher.docs"
     const val CLASS_OF_GENERATE_PREFIX: String = PROJECT + SEPARATOR + "Group_"
@@ -17,6 +17,7 @@ object CommonConst {
         PACKAGE_OF_GENERATE_FILE + DOT + CLASS_OF_GENERATE_PREFIX
 
 
+    const val METHOD_PROVIDER_ON_CREATE = "providerOnCreate"
     const val METHOD_ON_CREATE = "onCreate"
     const val METHOD_ON_TERMINATE = "onTerminate"
     const val METHOD_ON_CONFIGURATION_CHANGED = "onConfigurationChanged"

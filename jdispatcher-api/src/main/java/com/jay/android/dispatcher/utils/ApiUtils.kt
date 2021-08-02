@@ -23,14 +23,14 @@ object ApiUtils {
      */
     @JvmStatic
     fun isMainProcess(): Boolean =
-        TextUtils.equals(JDispatcher.application?.packageName, getProcessName())
+        TextUtils.equals(JDispatcher.instance.context?.packageName, getProcessName())
 
     /**
      * 获取进程全名
      */
     fun getProcessName(): String? {
         val am =
-            JDispatcher.application?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+            JDispatcher.instance.context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
                 ?: return ""
         val runningApps = am.runningAppProcesses ?: return ""
         for (proInfo in runningApps) {
@@ -58,34 +58,34 @@ object ApiUtils {
     }
 
 
-    private val SP: SharedPreferences by lazy {
-        JDispatcher.application!!.getSharedPreferences(
+    private val SP: SharedPreferences? by lazy {
+        JDispatcher.instance.context?.getSharedPreferences(
             ApiConst.JDISPATCHER_SP_CACHE_KEY,
             Context.MODE_PRIVATE
         )
     }
 
     fun putString(key: String, value: String) {
-        SP.edit().putString(key, value).apply()
+        SP?.edit()?.putString(key, value)?.apply()
     }
 
     fun getString(key: String): String? {
-        return SP.getString(key, null)
+        return SP?.getString(key, null)
     }
 
     fun putLong(key: String, value: Long) {
-        SP.edit().putLong(key, value).apply()
+        SP?.edit()?.putLong(key, value)?.apply()
     }
 
-    fun getLong(key: String): Long {
-        return SP.getLong(key, -1)
+    fun getLong(key: String): Long? {
+        return SP?.getLong(key, -1)
     }
 
     fun putStringSet(key: String, value: Set<String>) {
-        SP.edit().putStringSet(key, value).apply()
+        SP?.edit()?.putStringSet(key, value)?.apply()
     }
 
     fun getStringSet(key: String): MutableSet<String>? {
-        return SP.getStringSet(key, HashSet<String>())
+        return SP?.getStringSet(key, HashSet<String>())
     }
 }

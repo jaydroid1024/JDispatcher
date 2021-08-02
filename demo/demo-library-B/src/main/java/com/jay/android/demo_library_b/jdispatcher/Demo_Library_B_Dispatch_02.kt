@@ -19,6 +19,6 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
 )
 class Demo_Library_B_Dispatch_02 : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
-        Log.d("Jay", "DemoLibrary_B_Dispatch_02#onCreate$dispatchItem")
+        super.onCreate(app, dispatchItem)
     }
 }

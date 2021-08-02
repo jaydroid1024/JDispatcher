@@ -1,7 +1,6 @@
 package com.jay.android.demo_library_a.jdispatcher;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.jay.android.dispatcher.annotation.Dispatch;
 import com.jay.android.dispatcher.common.DispatchItem;
@@ -19,6 +18,6 @@ public class Demo_Library_A_Dispatch_01 extends DispatchTemplate {
 
   @Override
   public void onCreate(@NotNull Application app, @NotNull DispatchItem dispatchItem) {
-    Log.d(getTAG(), "Demo_Library_A_Dispatch_01#onCreate" + dispatchItem);
+    super.onCreate(app, dispatchItem);
   }
 }

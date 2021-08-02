@@ -1,6 +1,7 @@
 package com.jay.android.dispatcher.launcher
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Trace
 import androidx.annotation.NonNull
@@ -30,6 +31,8 @@ class JDispatcher private constructor() {
 
     private var registerByPlugin = false
 
+    var context: Context? = null
+
     private var dispatchHelper: DispatchHelper? = null
 
     //排好序的列表通过字节码注入到这里
@@ -53,16 +56,15 @@ class JDispatcher private constructor() {
     /**
      * 初始化
      *
-     * @param application
+     * @param context
      */
-    fun init(@NonNull application: Application): JDispatcher {
+    fun init(@NonNull context: Context): JDispatcher {
         if (!hasInit) {
             hasInit = true
-            JDispatcher.application = application
             // 加载排好序的 Dispatch （编译时|运行时）
-            loadSortedDispatch(application)
+            loadSortedDispatch(context)
             // 准备分发
-            dispatch()
+            dispatch(context)
         }
         return this
     }
@@ -70,9 +72,9 @@ class JDispatcher private constructor() {
     /**
      * 加载排好序的 Dispatch （编译时|运行时）
      *
-     * @param application
+     * @param context
      */
-    private fun loadSortedDispatch(application: Application) {
+    private fun loadSortedDispatch(context: Context) {
         //获取通过ASM字节码注入的排好序的列表
         registerDispatchSortedList()
         //编译时扫描+排序
@@ -84,7 +86,7 @@ class JDispatcher private constructor() {
         } else {
             //运行时扫描+排序
             Logger.debug("运行时扫描+排序")
-            loadSortedDispatchFromRuntime(application)
+            loadSortedDispatchFromRuntime(context)
         }
         Logger.debug("最终排好序的 dispatchSortedList：" + Warehouse.dispatchSortedList.toString())
     }
@@ -128,16 +130,16 @@ class JDispatcher private constructor() {
      * 运行时扫描+排序
      * 分发组类信息进行版本本地缓存
      *
-     * @param application
+     * @param context
      */
-    private fun loadSortedDispatchFromRuntime(application: Application) {
+    private fun loadSortedDispatchFromRuntime(context: Context) {
         val dispatchGroupClassList: Set<String>
         // 在调试模式或全新安装的情况下扫描获取
-        if (debuggable() || VersionHelper.isNewVersion(application)) {
+        if (debuggable() || VersionHelper.isNewVersion(context)) {
             Logger.info("在调试模式或全新安装的情况下扫描获取")
             //获取项目中通过 APT 生成的所有分发类组的 ClassName
             dispatchGroupClassList = ClassUtils.getFileNameByPackageName(
-                application,
+                context,
                 CommonConst.PACKAGE_OF_GENERATE_FILE //com.jay.android.dispatcher.generate.dispatch
             )
             //分发组类信息本地缓存
@@ -214,15 +216,16 @@ class JDispatcher private constructor() {
     /**
      * 分发入口
      */
-    private fun dispatch() {
-        if (!hasInit || application == null) {
+    private fun dispatch(context: Context) {
+        this.context = context
+        if (!hasInit) {
             throw RuntimeException("JDispatcher.init(context) first!")
         }
         if (dispatchHelper == null) {
             dispatchHelper = DispatchHelper(Warehouse.dispatchSortedList)
         }
         // onCreate 方法与其他App回调方法不同，需要在这里手动调用
-        onCreate(application!!)
+        onProviderCreate(context)
     }
 
     fun destroy() {
@@ -235,7 +238,11 @@ class JDispatcher private constructor() {
         return debuggable
     }
 
-    private fun onCreate(application: Application) {
+    fun onCreate(@NonNull application: Application) {
+        JDispatcher.application = application
+        if (dispatchHelper == null) {
+            throw RuntimeException("JDispatcher.init(context) first!")
+        }
         val totalOnCreateTime = CommonUtils.timeStr("总的 onCreate ") {
             // todo Trace 事件打点使用说明 https://developer.android.com/topic/performance/tracing/custom-events?hl=zh-cn
             // Android 4.3（API 级别 18）及更高版本中， 您可以在代码中使用 Trace 类来定义
@@ -249,10 +256,19 @@ class JDispatcher private constructor() {
         logInfo(totalOnCreateTime)
     }
 
+
+    fun onProviderCreate(@NonNull context: Context) {
+        val totalProviderOnCreateTime = CommonUtils.timeStr("总的 onProviderCreate ") {
+            dispatchHelper?.onProviderCreate(context)
+        }
+    }
+
     private fun logInfo(totalOnCreateTime: String) {
         logInfo["total_on_create_time"] = totalOnCreateTime
         val dispatchSubInfoList = arrayListOf<Map<String, String>>()
+
         Warehouse.dispatchSortedList.forEach {
+
             val dispatchSubInfo = linkedMapOf<String, String>()
             dispatchSubInfo["name"] = it.name
             dispatchSubInfo["priority"] = it.priority.toString()
@@ -295,10 +311,12 @@ class JDispatcher private constructor() {
             ConcurrentHashMap()
         }
 
-        const val JDISPATCHER_SP_KEY_LIST = "JDISPATCHER_SP_KEY_LIST"
+        private const val JDISPATCHER_SP_KEY_LIST = "JDISPATCHER_SP_KEY_LIST"
 
         var application: Application? = null
 
+
+        @JvmStatic
         val instance: JDispatcher by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { JDispatcher() }
     }
 

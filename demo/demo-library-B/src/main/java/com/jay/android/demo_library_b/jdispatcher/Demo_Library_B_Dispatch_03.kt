@@ -1,7 +1,6 @@
 package com.jay.android.demo_library_b.jdispatcher
 
 import android.app.Application
-import android.util.Log
 import com.jay.android.dispatcher.annotation.Dimension
 import com.jay.android.dispatcher.annotation.Dispatch
 import com.jay.android.dispatcher.common.DispatchItem
@@ -21,6 +20,6 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
 )
 class Demo_Library_B_Dispatch_03 : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
-        Log.d("Jay", "DemoLibrary_B_Dispatch_03#onCreate$dispatchItem")
+        super.onCreate(app, dispatchItem)
     }
 }

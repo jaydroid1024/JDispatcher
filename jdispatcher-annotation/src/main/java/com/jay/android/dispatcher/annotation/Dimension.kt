@@ -91,7 +91,7 @@ object Dimension {
      * ContentProvider 超前初始化
      * 1024
      */
-    const val PRELOAD = MANUAL.shl(1)
+    const val PROVIDER = MANUAL.shl(1)
 
 
     /*
@@ -103,6 +103,12 @@ object Dimension {
      */
     const val DIMENSION_DEFAULT =
         PROCESS_MAIN or THREAD_UI or BUILD_ALL or AUTOMATIC
+
+    /**
+     * 主进程+UI线程+构建所有+自动初始化
+     */
+    const val DIMENSION_DEFAULT_PROVIDER =
+        PROCESS_MAIN or THREAD_UI or BUILD_ALL or PROVIDER
 
     /**
      * 主进程+工作线程+构建所有+自动初始化
@@ -129,8 +135,8 @@ object Dimension {
         PROCESS_MAIN or THREAD_UI or BUILD_ALL or MANUAL
 
 
-    fun isPreload(dimension: Int): Boolean {
-        return dimension and PRELOAD == PRELOAD
+    fun isProvider(dimension: Int): Boolean {
+        return dimension and PROVIDER == PROVIDER
     }
 
     fun isManual(dimension: Int): Boolean {
@@ -149,7 +155,7 @@ object Dimension {
             isAutomatic(dimension) -> {
                 "自动初始化"
             }
-            isPreload(dimension) -> {
+            isProvider(dimension) -> {
                 "超前初始化"
             }
             else -> {

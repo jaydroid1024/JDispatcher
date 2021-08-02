@@ -5,7 +5,7 @@ apply plugin: 'jdispatcher'
 dispatcher {
     appCanonicalName = "com.jay.android.demo_library_a.App"
     buildIncremental = false //todo 增量编译还有问题
-    buildDebug = true
+    buildDebug = false
 }
 
 

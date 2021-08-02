@@ -54,7 +54,6 @@ open class BaseTransform(val project: Project) : Transform() {
     @Throws(TransformException::class, InterruptedException::class, IOException::class)
     override fun transform(invocation: TransformInvocation) {
         super.transform(invocation)
-        dispatcherExtension = PluginUtils.getDispatcherExtension(project)
         beforeTransform()
         handleTransform(invocation)
         afterTransform()
@@ -67,12 +66,14 @@ open class BaseTransform(val project: Project) : Transform() {
     }
 
     open fun beforeTransform() {
+        dispatcherExtension = PluginUtils.getDispatcherExtension(project)
+        dispatcherExtension?.let { setLogger(it) }
         Logger.debug("beforeTransform...")
 
     }
 
     open fun handleTransform(invocation: TransformInvocation) {
-        dispatcherExtension?.let { setLogger(it) }
+        //子类实现
     }
 
     private fun setLogger(extension: DispatcherExtension) {

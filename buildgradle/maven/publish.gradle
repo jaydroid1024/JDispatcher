@@ -20,7 +20,7 @@ def GROUP = rootProject.ext.jdispatcherJitpackGroup
 // 项目名称 根据包名取最后的路径名称
 def ARTIFACT_ID = project.name
 // 版本号 每个组件都要指定
-def VERSION = rootProject.ext.jdispatcherVersion
+def VERSION = rootProject.ext.jdispatcherPublishVersion
 //远程Maven仓库的URL
 def URL =  rootProject.ext.jdispatcherLocalRepo
 

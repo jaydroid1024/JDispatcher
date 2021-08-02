@@ -1,6 +1,7 @@
 package com.jay.android.dispatcher.common
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import java.util.*
 
@@ -22,6 +23,14 @@ interface IDispatch {
      */
 
     fun onCreate(app: Application, dispatchItem: DispatchItem)
+
+    /**
+     * 在 [Application.onCreate] 之前调用
+     *
+     * @param context
+     * @param dispatchItem
+     */
+    fun onPreCreate(context: Context, dispatchItem: DispatchItem)
 
     /**
      * 在 [Application.onTerminate] 中调用

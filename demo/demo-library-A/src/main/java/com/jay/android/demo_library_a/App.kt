@@ -4,7 +4,6 @@ import androidx.multidex.MultiDexApplication
 import com.jay.android.dispatcher.launcher.JDispatcher
 import java.util.*
 
-
 /**
  * @author jaydroid
  * @version 1.0
@@ -14,6 +13,12 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        JDispatcher.instance
+            .withDispatchExtraParam(getDispatchExtraParam())//分发参数
+            .onCreate(this)
+    }
+
+    private fun getDispatchExtraParam(): HashMap<String, HashMap<String, String>> {
         //为分发类指定自定义参数，用于三方key的统一收口配置
         val dispatchExtraParam = HashMap<String, HashMap<String, String>>()
         dispatchExtraParam["com.jay.android.jdispatcher.DispatcherAppDemo"] =
@@ -25,15 +30,8 @@ class App : MultiDexApplication() {
                 Pair("key1", "value1_release"),
                 Pair("key2", "value2_release")
             )
-
-        //自动分发
-        JDispatcher.instance
-            .withDebugAble(true)//调试模式：打印更多日志，实时刷新等
-            .withDispatchExtraParam(dispatchExtraParam)//分发参数
-            .init(this)
-
+        return dispatchExtraParam
     }
-
 
 // region如果在 app build.gradle 中配置了
 // dispatcher {appCanonicalName = "com.jay.android.App"}

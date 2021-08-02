@@ -1,6 +1,7 @@
 package com.jay.android.dispatcher.dispatch
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Trace
 import com.jay.android.dispatcher.annotation.Dimension
@@ -9,6 +10,7 @@ import com.jay.android.dispatcher.common.CommonConst.METHOD_ON_CREATE
 import com.jay.android.dispatcher.common.CommonConst.METHOD_ON_LOW_MEMORY
 import com.jay.android.dispatcher.common.CommonConst.METHOD_ON_TERMINATE
 import com.jay.android.dispatcher.common.CommonConst.METHOD_ON_TRIM_MEMORY
+import com.jay.android.dispatcher.common.CommonConst.METHOD_PROVIDER_ON_CREATE
 import com.jay.android.dispatcher.common.CommonUtils
 import com.jay.android.dispatcher.common.DispatchItem
 import com.jay.android.dispatcher.common.Logger
@@ -34,15 +36,30 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
      */
     private fun isIgnoreDispatch(dispatchItem: DispatchItem, dispatchMethod: String): Boolean {
         //只忽略 onCreate 方法的调用时机，
-        if (dispatchMethod != METHOD_ON_CREATE) {
+        if (dispatchMethod != METHOD_ON_CREATE && dispatchMethod != METHOD_PROVIDER_ON_CREATE) {
+            Logger.debug(
+                "dispatchMethod, name: " + dispatchItem.name
+                        + ", dimension: " + dispatchItem.dimension
+                        + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
+            )
             return false
         }
         //手动延迟分发时忽略掉
         if (Dimension.isManual(dispatchItem.dimension)) {
+            Logger.debug(
+                "isManual, name: " + dispatchItem.name
+                        + ", dimension: " + dispatchItem.dimension
+                        + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
+            )
             return true
         }
         //需要debug维度下分发的在release构建时忽略掉
         if (Dimension.isBuildDebug(dispatchItem.dimension) && !JDispatcher.instance.debuggable()) {
+            Logger.debug(
+                "isBuildDebug, name: " + dispatchItem.name
+                        + ", dimension: " + dispatchItem.dimension
+                        + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
+            )
             return true
         }
         // ✔️ ❌     主进程，子进程
@@ -53,6 +70,11 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
         if ((Dimension.isProcessMain(dispatchItem.dimension) && !isMainProcess()) ||
             Dimension.isProcessOther(dispatchItem.dimension) && isMainProcess()
         ) {
+            Logger.debug(
+                "isProcessMain, name: " + dispatchItem.name
+                        + ", dimension: " + dispatchItem.dimension
+                        + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
+            )
             return true
         }
         return false
@@ -81,13 +103,32 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
     }
 
 
+    fun onProviderCreate(context: Context) {
+        if (Warehouse.isDispatchListEmpty()) return
+        dispatch(METHOD_PROVIDER_ON_CREATE) { dispatchItem ->
+            if (Dimension.isProvider(dispatchItem.dimension)) {
+                dispatchProviderOnCreate(dispatchItem, context)
+            }
+        }
+    }
+
+    private fun dispatchProviderOnCreate(dispatchItem: DispatchItem, context: Context) {
+        //进程信息
+        dispatchItem.processName = ApiUtils.getProcessName() ?: ""
+        dispatchItem.time = CommonUtils.time("${dispatchItem.name}#$METHOD_PROVIDER_ON_CREATE  ") {
+            dispatchItem.instance?.onPreCreate(context, dispatchItem)
+        }
+    }
+
     fun onCreate(
         application: Application,
         dispatchExtraParam: HashMap<String, HashMap<String, String>>
     ) {
         if (Warehouse.isDispatchListEmpty()) return
         dispatch(METHOD_ON_CREATE) { dispatchItem ->
-            dispatchOnCreate(dispatchExtraParam, dispatchItem, application)
+            if (!Dimension.isProvider(dispatchItem.dimension)) {
+                dispatchOnCreate(dispatchExtraParam, dispatchItem, application)
+            }
         }
     }
 
@@ -178,11 +219,6 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
         for (dispatchItem in sortedDispatchList!!) {
             //添加忽略规则去除不符合分发维度的
             if (isIgnoreDispatch(dispatchItem, dispatchMethod)) {
-                Logger.debug(
-                    "IgnoreDispatch, name: " + dispatchItem.name
-                            + "dimension: "
-                            + Dimension.getDimensionStr(dispatchItem.dimension)
-                )
                 continue
             }
             //按照优先级和依赖项的分发操作
