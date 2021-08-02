@@ -32,15 +32,15 @@ import com.jay.android.dispatcher.launcher.JDispatcher
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class InitializationProvider : ContentProvider() {
+
     override fun onCreate(): Boolean {
         if (context != null) {
-            JDispatcher.instance.init(context)
+            JDispatcher.instance.init(context!!)
         } else {
-            throw StartupException("Context cannot be null")
+            throw RuntimeException("Context cannot be null")
         }
         return true
     }
-
 
     override fun query(
         uri: Uri,
