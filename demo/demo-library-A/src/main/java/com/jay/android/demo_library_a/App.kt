@@ -2,6 +2,7 @@ package com.jay.android.demo_library_a
 
 import android.util.Log
 import androidx.multidex.MultiDexApplication
+import com.jay.android.dispatcher.common.CommonConst
 import com.jay.android.dispatcher.launcher.JDispatcher
 import com.jay.android.dispatcher.utils.ApiUtils
 import java.util.*
@@ -15,11 +16,12 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        //init 已经在 InitializationProvider 中提前初始化，到这里需要分发onCreate 或在其他配置
         JDispatcher.instance
             .withDispatchExtraParam(getDispatchExtraParam())//分发参数
-            .onCreate(this)
-        Log.d("Jay", "onCreate in process: " + ApiUtils.getProcessName())
-
+            .withDebugAble(true) //调试模式，打印更多日志
+            .onCreate(this)//分发onCreate
+        Log.d(CommonConst.TAG, "onCreate in process: " + ApiUtils.getProcessName())
     }
 
     private fun getDispatchExtraParam(): HashMap<String, HashMap<String, String>> {

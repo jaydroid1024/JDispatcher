@@ -16,7 +16,7 @@ Android 组件生命周期分发框架，适用于组件化，模块化，启动
   - 在指定线程(主线程，空闲线程，工作线程)中分发，实现异步加载
   - 支持通过非阻塞式异步通知机制实现异步加载与同步加载交叉使用的情况（todo）
   - 手动延迟调用分发，实现延迟加载
-  - 通过 ContentProvider 实现在 Application 之前超前预加载（todo）
+  - 支持通过 ContentProvider 实现在 Application 之前超前预加载
   - 只在debug模式下分发，实现 DevTools、DoKit 等开发工具的初始化
 - 维度值采用对整型 or/and 的位操作完成多维度值的收集与识别，灵活且高效
 - 支持初始化时批量传参，可用于多项目多环境的三方 sdk 的初始化，使环境配置更统一
@@ -100,8 +100,18 @@ dispatcher {
 
 ```kotlin
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
+        //init 已经在 InitializationProvider 中提前初始化，到这里需要分发onCreate 或在其他配置
+        JDispatcher.instance
+            .withDispatchExtraParam(getDispatchExtraParam())//分发参数
+            .withDebugAble(true) //调试模式，打印更多日志
+            .onCreate(this)//分发onCreate
+        Log.d(CommonConst.TAG, "onCreate in process: " + ApiUtils.getProcessName())
+    }
+
+    private fun getDispatchExtraParam(): HashMap<String, HashMap<String, String>> {
         //为分发类指定自定义参数，用于三方key的统一收口配置
         val dispatchExtraParam = HashMap<String, HashMap<String, String>>()
         dispatchExtraParam["com.jay.android.jdispatcher.DispatcherAppDemo"] =
@@ -113,12 +123,7 @@ class App : Application() {
                 Pair("key1", "value1_release"),
                 Pair("key2", "value2_release")
             )
-
-        //自动分发
-        JDispatcher.instance
-            .withDebugAble(true)//调试模式：打印更多日志，实时刷新等
-            .withDispatchExtraParam(dispatchExtraParam)//分发参数
-            .init(this)
+        return dispatchExtraParam
     }
   
   
