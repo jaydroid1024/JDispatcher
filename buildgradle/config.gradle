@@ -35,7 +35,7 @@ ext {
     def dependenceTypeIsModule = true
 
     dispatcher = [
-            jdispatcherVersion = '0.0.4',
+            jdispatcherVersion = '0.0.5',
             jdispatcherPublishVersion = '0.0.5',
             jdispatcherLocalRepo = "file://" + project.rootDir + "/jdispatcher_plugin_repo",
             jdispatcherJitpackGroup = "com.github.jaydroid1024.JDispatcher",

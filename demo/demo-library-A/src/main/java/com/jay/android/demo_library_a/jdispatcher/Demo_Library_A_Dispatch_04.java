@@ -20,9 +20,8 @@ import org.jetbrains.annotations.NotNull;
     priority = Priority.HIGH.HIGH_III,
     description = "组件B的04个Dispatch")
 public class Demo_Library_A_Dispatch_04 extends DispatchTemplate {
-
   @Override
-  public void onCreate(@NotNull Application application, @NotNull DispatchItem dispatchItem) {
-
+  public void onCreate(@NotNull Application app, @NotNull DispatchItem dispatchItem) {
+    super.onCreate(app, dispatchItem);
   }
 }

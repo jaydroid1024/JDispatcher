@@ -60,9 +60,16 @@ class TransformScanHelper(
 
     fun startTransform() {
         try {
+            Logger.debug("startTransform isIncremental: $isIncremental")
+            Logger.debug("startTransform outputProvider: $outputProvider")
+
             //非增量编译，清空输出目录
-            if (!isIncremental && outputProvider != null) {
-                outputProvider!!.deleteAll()
+            if (!isIncremental) {
+                try {
+                    outputProvider?.deleteAll()
+                } catch (e: IOException) {
+                    Logger.error(e.localizedMessage.toString())
+                }
             }
 
             inputs?.forEach { input ->
@@ -73,7 +80,7 @@ class TransformScanHelper(
             }
 
             //异步执行扫描任务，加快编译速度
-            Logger.debug("transform Tasks.size: ${tasks.size}")
+            Logger.debug("startTransform Tasks.size: ${tasks.size}")
 
             //todo 线程并发数量太少，替换线程池
             executor.invokeAll(tasks)

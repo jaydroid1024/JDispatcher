@@ -1,5 +1,6 @@
 package com.jay.android.dispatcher.dispatch
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
@@ -19,20 +20,16 @@ abstract class DispatchTemplate : IDispatch {
 
     open val TAG: String = this.javaClass.simpleName
 
-    open var app: Application? = null
-
-    open var context: Context? = null
-
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
         Log.d(TAG, "${TAG}#onCreate, dispatchItem: $dispatchItem")
         Log.d(CommonConst.TAG, "${TAG}#onCreate, dispatchItem: $dispatchItem")
-        this.app = app
+        DispatchTemplate.app = app
     }
 
     override fun onPreCreate(context: Context, dispatchItem: DispatchItem) {
         Log.d(TAG, "${TAG}#onCreate, dispatchItem: $dispatchItem")
         Log.d(CommonConst.TAG, "${TAG}#onCreate, dispatchItem: $dispatchItem")
-        this.context = context
+        DispatchTemplate.context = context
     }
 
     override fun onTerminate() {
@@ -53,6 +50,15 @@ abstract class DispatchTemplate : IDispatch {
     override fun onTrimMemory(level: Int) {
         Log.d(TAG, "${TAG}#onTrimMemory,level=$level")
         Log.d(CommonConst.TAG, "${TAG}#onTrimMemory,level=$level")
+    }
+
+    companion object {
+
+        var app: Application? = null
+
+        @SuppressLint("StaticFieldLeak")
+        var context: Context? = null
+
     }
 
 }

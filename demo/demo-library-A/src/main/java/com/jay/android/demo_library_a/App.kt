@@ -15,7 +15,7 @@ class App : MultiDexApplication() {
         super.onCreate()
         JDispatcher.instance
             .withDispatchExtraParam(getDispatchExtraParam())//分发参数
-
+            .onCreate(this)
     }
 
     private fun getDispatchExtraParam(): HashMap<String, HashMap<String, String>> {

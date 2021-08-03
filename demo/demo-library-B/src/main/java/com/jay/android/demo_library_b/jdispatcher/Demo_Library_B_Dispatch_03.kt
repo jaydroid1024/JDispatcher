@@ -20,6 +20,6 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
 )
 class Demo_Library_B_Dispatch_03 : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
-//        super.onCreate(app, dispatchItem)
+        super.onCreate(app, dispatchItem)
     }
 }
