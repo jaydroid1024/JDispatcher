@@ -1,7 +1,9 @@
 package com.jay.android.demo_library_a
 
+import android.util.Log
 import androidx.multidex.MultiDexApplication
 import com.jay.android.dispatcher.launcher.JDispatcher
+import com.jay.android.dispatcher.utils.ApiUtils
 import java.util.*
 
 /**
@@ -16,6 +18,8 @@ class App : MultiDexApplication() {
         JDispatcher.instance
             .withDispatchExtraParam(getDispatchExtraParam())//分发参数
             .onCreate(this)
+        Log.d("Jay", "onCreate in process: " + ApiUtils.getProcessName())
+
     }
 
     private fun getDispatchExtraParam(): HashMap<String, HashMap<String, String>> {

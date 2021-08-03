@@ -37,7 +37,15 @@ class DispatchItem(
     }
 
     override fun toString(): String {
-        return "DispatchItem(name='$name', priority=$priority, dimension=$dimension, className='$className', dependencies=${dependencies.contentToString()}, description='$description', instance=$instance, extraParam=$extraParam)"
+        return "DispatchItem(name=$name," +
+                " processName=$processName, " +
+                " priority=$priority," +
+                " dimension=$dimension," +
+                " time=$time, " +
+                " extraParam=$extraParam, " +
+                " dependencies=${dependencies.contentToString()}," +
+                " className=$className, " +
+                " description=$description )"
     }
 
     companion object {

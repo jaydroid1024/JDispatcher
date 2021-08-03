@@ -33,23 +33,23 @@ abstract class DispatchTemplate : IDispatch {
     }
 
     override fun onTerminate() {
-        Log.d(TAG, "${TAG}#onTerminate")
-        Log.d(CommonConst.TAG, "${TAG}#onTerminate")
+        Log.i(TAG, "${TAG}#onTerminate")
+        Log.i(CommonConst.TAG, "${TAG}#onTerminate")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        Log.d(TAG, "${TAG}#onConfigurationChanged,newConfig=$newConfig")
-        Log.d(CommonConst.TAG, "${TAG}#onConfigurationChanged,newConfig=$newConfig")
+        Log.i(TAG, "${TAG}#onConfigurationChanged,newConfig=$newConfig")
+        Log.i(CommonConst.TAG, "${TAG}#onConfigurationChanged,newConfig=$newConfig")
     }
 
     override fun onLowMemory() {
-        Log.d(TAG, "${TAG}#onLowMemory")
-        Log.d(CommonConst.TAG, "${TAG}#onLowMemory")
+        Log.i(TAG, "${TAG}#onLowMemory")
+        Log.i(CommonConst.TAG, "${TAG}#onLowMemory")
     }
 
     override fun onTrimMemory(level: Int) {
-        Log.d(TAG, "${TAG}#onTrimMemory,level=$level")
-        Log.d(CommonConst.TAG, "${TAG}#onTrimMemory,level=$level")
+        Log.i(TAG, "${TAG}#onTrimMemory,level=$level")
+        Log.i(CommonConst.TAG, "${TAG}#onTrimMemory,level=$level")
     }
 
     companion object {

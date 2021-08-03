@@ -240,8 +240,9 @@ class JDispatcher private constructor() {
 
     fun onCreate(@NonNull application: Application) {
         JDispatcher.application = application
-        if (dispatchHelper == null) {
-            throw RuntimeException("JDispatcher.init(context) first!")
+        //init 在 InitializationProvider 已预先经初始化,这里考虑多进程的情况
+        if (!hasInit || dispatchHelper == null) {
+            init(application)
         }
         val totalOnCreateTime = CommonUtils.timeStr("总的 onCreate ") {
             // todo Trace 事件打点使用说明 https://developer.android.com/topic/performance/tracing/custom-events?hl=zh-cn

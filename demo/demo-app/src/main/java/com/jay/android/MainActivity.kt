@@ -1,5 +1,6 @@
 package com.jay.android
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -16,8 +17,12 @@ class MainActivity : AppCompatActivity() {
         text.text = CommonUtils.prettyToJson(JDispatcher.logInfo)
     }
 
-    fun onInfo(view: View) {
+    fun onManualDispatch(view: View) {
         //手动调用分发
         JDispatcher.instance.manualDispatch("D_B_03")
+    }
+
+    fun goToOtherProcess(view: View) {
+        startActivity(Intent(this, OtherProcessActivity::class.java))
     }
 }

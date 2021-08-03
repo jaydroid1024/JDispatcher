@@ -15,7 +15,7 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
 @Dispatch(
     priority = 17,
     dependencies = ["D_A_03"],
-    dimension = Dimension.DIMENSION_DEFAULT,
+    dimension = Dimension.PROCESS_ALL or Dimension.THREAD_UI or Dimension.BUILD_ALL or Dimension.AUTOMATIC,
     description = "DispatcherAppDemo"
 )
 class DispatcherAppDemo : DispatchTemplate() {

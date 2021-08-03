@@ -17,6 +17,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.jay.android.OtherProcessActivity"
+            android:exported="true"
+            android:process=":other_process" />
+
     </application>
 
 </manifest>
