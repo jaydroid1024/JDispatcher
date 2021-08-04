@@ -75,7 +75,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
 
     override fun handleTransform(invocation: TransformInvocation) {
         super.handleTransform(invocation)
-        logInfo["Date"] = timeFormat.format(Date())
+        logInfo["compile_date"] = timeFormat.format(Date())
         logInfo["transform_total_time"] = time("transform ") {
             try {
                 logInfo["scan_time"] = time("scan ") {
@@ -245,6 +245,8 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
 
 
     private fun loadDispatchFromGroup() {
+        //清除上一次的缓存
+        Warehouse.clear()
         dispatchClassSet.forEach { className ->
             val dispatchClazz = loadClass(className)?.newInstance()
             if (dispatchClazz is IDispatchGroup) {

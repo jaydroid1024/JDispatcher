@@ -100,8 +100,10 @@ class JDispatcher private constructor() {
      * @param dispatchSortedJsonList
      */
     private fun loadSortedDispatchFromPluginJsonList(dispatchSortedJsonList: ArrayList<String>) {
+        Logger.debug("dispatchSortedJsonList size:" + dispatchSortedJsonList.size)
 
         dispatchSortedJsonList.forEach { jsonItem ->
+            //反序列列化 DispatchItem
             val dispatchItem: DispatchItem? = try {
                 CommonUtils.fromJson(jsonItem, DispatchItem::class.java)
             } catch (e: Exception) {
@@ -111,12 +113,16 @@ class JDispatcher private constructor() {
             }
 
             dispatchItem?.let { dispatch ->
+                //反射获取 Dispatcher 实例
                 val dispatchItemClazz = try {
+                    Logger.debug("className:" + dispatch.className)
                     Class.forName(dispatch.className).getConstructor().newInstance()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Logger.error(e.message.toString())
+                    Logger.error(dispatch.className)
                 }
+
                 if (dispatchItemClazz is IDispatch) {
                     dispatch.instance = dispatchItemClazz
                     Warehouse.dispatchSortedList.add(dispatch)
@@ -133,25 +139,16 @@ class JDispatcher private constructor() {
      * @param context
      */
     private fun loadSortedDispatchFromRuntime(context: Context) {
-        val dispatchGroupClassList: Set<String>
-        // 在调试模式或全新安装的情况下扫描获取
-        if (debuggable() || VersionHelper.isNewVersion(context)) {
-            Logger.info("在调试模式或全新安装的情况下扫描获取")
-            //获取项目中通过 APT 生成的所有分发类组的 ClassName
-            dispatchGroupClassList = ClassUtils.getFileNameByPackageName(
-                context,
-                CommonConst.PACKAGE_OF_GENERATE_FILE //com.jay.android.dispatcher.generate.dispatch
-            )
-            //分发组类信息本地缓存
-            if (dispatchGroupClassList.isNotEmpty()) {
-                ApiUtils.putStringSet(JDISPATCHER_SP_KEY_LIST, dispatchGroupClassList)
-            }
-            VersionHelper.updateVersion()
-        } else {
-            //正式版本中从缓存获取 dispatch group className，避免重复扫描
-            Logger.info("正式版本中从缓存获取 dispatch group className")
-            dispatchGroupClassList = HashSet(ApiUtils.getStringSet(JDISPATCHER_SP_KEY_LIST))
-        }
+
+        //获取项目中通过 APT 生成的所有分发类组的 ClassName
+        val dispatchGroupClassList: Set<String> = ClassUtils.getFileNameByPackageName(
+            context,
+            CommonConst.PACKAGE_OF_GENERATE_FILE
+        )
+
+        // 在调试模式或全新安装的情况下扫描获取,todo 版本本地缓存 release 模式同一版本调试可能会有问题
+//        dispatchGroupClassList = getDispatchGroupByVersionCache(context, dispatchGroupClassList)
+
         Logger.info("运行时获取的 dispatchGroupClassList：$dispatchGroupClassList")
         // 从分发类组中获取所有分发类 缓存到 dispatchOriginalMap
         DispatchListSortHelper.loadDispatchFromGroup(dispatchGroupClassList)
@@ -171,6 +168,31 @@ class JDispatcher private constructor() {
                 }
             }
         }
+    }
+
+    private fun getDispatchGroupByVersionCache(
+        context: Context,
+        dispatchGroupClassList: Set<String>
+    ): Set<String> {
+        var dispatchGroupClassList1 = dispatchGroupClassList
+        if (debuggable() || VersionHelper.isNewVersion(context)) {
+            Logger.info("在调试模式或全新安装的情况下扫描获取")
+            //获取项目中通过 APT 生成的所有分发类组的 ClassName
+            dispatchGroupClassList1 = ClassUtils.getFileNameByPackageName(
+                context,
+                CommonConst.PACKAGE_OF_GENERATE_FILE //com.jay.android.dispatcher.generate.dispatch
+            )
+            //分发组类信息本地缓存
+            if (dispatchGroupClassList1.isNotEmpty()) {
+                ApiUtils.putStringSet(JDISPATCHER_SP_KEY_LIST, dispatchGroupClassList1)
+            }
+            VersionHelper.updateVersion()
+        } else {
+            //正式版本中从缓存获取 dispatch group className，避免重复扫描
+            Logger.info("正式版本中从缓存获取 dispatch group className")
+            dispatchGroupClassList1 = HashSet(ApiUtils.getStringSet(JDISPATCHER_SP_KEY_LIST))
+        }
+        return dispatchGroupClassList1
     }
 
 

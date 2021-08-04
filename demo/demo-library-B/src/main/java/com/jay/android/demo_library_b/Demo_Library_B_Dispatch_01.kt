@@ -1,4 +1,4 @@
-package com.jay.android.demo_library_b.jdispatcher
+package com.jay.android.demo_library_b
 
 import android.app.Application
 import com.jay.android.dispatcher.annotation.Dispatch

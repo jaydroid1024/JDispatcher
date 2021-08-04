@@ -29,6 +29,7 @@ class DispatchItem(
     var instance: IDispatch? = null
     var extraParam: HashMap<String, String>? = null
     var processName: String = ""
+    var thread: String = ""
     var time: Long = 0
 
     override fun compareTo(other: DispatchItem): Int {
@@ -39,6 +40,7 @@ class DispatchItem(
     override fun toString(): String {
         return "DispatchItem(name=$name," +
                 " processName=$processName, " +
+                " thread=$thread, " +
                 " priority=$priority," +
                 " dimension=$dimension," +
                 " time=$time, " +

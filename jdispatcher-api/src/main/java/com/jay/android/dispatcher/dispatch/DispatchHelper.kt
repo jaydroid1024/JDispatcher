@@ -37,11 +37,6 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
     private fun isIgnoreDispatch(dispatchItem: DispatchItem, dispatchMethod: String): Boolean {
         //只忽略 onCreate 方法的调用时机，
         if (dispatchMethod != METHOD_ON_CREATE && dispatchMethod != METHOD_PROVIDER_ON_CREATE) {
-            Logger.debug(
-                "dispatchMethod, name: " + dispatchItem.name
-                        + ", dimension: " + dispatchItem.dimension
-                        + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
-            )
             return false
         }
         //手动延迟分发时忽略掉
@@ -142,10 +137,10 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
             dispatchItem.extraParam = dispatchExtraParam[dispatchItem.name]
         }
         //进程信息
-        dispatchItem.processName = ApiUtils.getProcessName() ?: ""
+        dispatchItem.processName = ApiUtils.getProcessName()
 
         //分发 onCreate
-        dispatchItem.time = CommonUtils.time("${dispatchItem.name}#$METHOD_ON_CREATE  ") {
+        val time = CommonUtils.time("${dispatchItem.name}#$METHOD_ON_CREATE  ") {
             Trace.beginSection("${dispatchItem.name}#$METHOD_ON_CREATE  ")
             //需要在主线程空闲维度分发的直接过滤掉不参与排序
             when {
@@ -162,7 +157,7 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
             }
             Trace.endSection()
         }
-
+        dispatchItem.time = time
     }
 
     @Synchronized

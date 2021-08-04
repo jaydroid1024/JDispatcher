@@ -14,7 +14,7 @@ class ApplicationOnTrimMemoryMethodVisitor(mv: MethodVisitor) : MethodVisitor(Op
 
     fun callSuper() {
         mv.visitVarInsn(Opcodes.ALOAD, 0)
-        mv.visitVarInsn(Opcodes.ALOAD, 1)
+        mv.visitVarInsn(Opcodes.ILOAD, 1)
         mv.visitMethodInsn(
             Opcodes.INVOKESPECIAL,
             "android/app/Application",

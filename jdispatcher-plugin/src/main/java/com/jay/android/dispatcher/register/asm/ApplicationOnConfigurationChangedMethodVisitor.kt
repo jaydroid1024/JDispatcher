@@ -42,7 +42,7 @@ class ApplicationOnConfigurationChangedMethodVisitor(mv: MethodVisitor) :
                 "()Lcom/jay/android/dispatcher/launcher/JDispatcher;",
                 false
             )
-            mv.visitVarInsn(Opcodes.ILOAD, 1)
+            mv.visitVarInsn(Opcodes.ALOAD, 1)
             mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
                 "com/jay/android/dispatcher/launcher/JDispatcher",

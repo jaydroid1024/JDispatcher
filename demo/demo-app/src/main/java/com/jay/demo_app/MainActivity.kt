@@ -1,4 +1,4 @@
-package com.jay.android
+package com.jay.demo_app
 
 import android.content.Intent
 import android.os.Bundle

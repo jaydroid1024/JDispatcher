@@ -28,10 +28,9 @@ object ApiUtils {
     /**
      * 获取进程全名
      */
-    fun getProcessName(): String? {
-        val am =
-            JDispatcher.instance.context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-                ?: return ""
+    fun getProcessName(): String {
+        val am = JDispatcher.instance.context?.getSystemService(Context.ACTIVITY_SERVICE)
+                as? ActivityManager ?: return ""
         val runningApps = am.runningAppProcesses ?: return ""
         for (proInfo in runningApps) {
             if (proInfo.pid == Process.myPid()) {
@@ -42,6 +41,8 @@ object ApiUtils {
         }
         return ""
     }
+
+    fun getThreadName(): String = Thread.currentThread().name
 
 
     fun getPackageInfo(context: Context): PackageInfo? {

@@ -103,7 +103,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        //init 已经在 InitializationProvider 中提前初始化，到这里需要分发onCreate 或在其他配置
+        //init 已经在 InitializationProvider 中提前初始化，到这里需要分发 onCreate 或其他配置
         JDispatcher.instance
             .withDispatchExtraParam(getDispatchExtraParam())//分发参数
             .withDebugAble(true) //调试模式，打印更多日志

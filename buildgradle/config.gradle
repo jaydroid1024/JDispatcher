@@ -24,7 +24,7 @@ ext {
     ]
 
 
-    //仓库类型
+    // 仓库类型
     // false: 远程仓库
     // true: 本地仓库
     def currentMavenRepositoryTypeIsDev = false
