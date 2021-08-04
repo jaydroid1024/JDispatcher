@@ -32,7 +32,7 @@ ext {
     // 依赖类型
     // true: 依赖module运行
     // false: 依赖jar/aar运行
-    def dependenceTypeIsModule = false
+    def dependenceTypeIsModule = true
 
     dispatcher = [
             jdispatcherVersion = '0.0.6',
