@@ -16,6 +16,7 @@ dependencies {
 
     implementation rootProject.ext.tracing
     implementation rootProject.ext.multidex
+    implementation rootProject.ext.kotlinReflect
 
     def dependenceTypeIsModule = rootProject.ext.mavenRepo["dependenceTypeIsModule"]
     if (dependenceTypeIsModule) {

@@ -19,7 +19,7 @@ ext {
     ]
 
     kotlin = [
-            kotlinVersion = '1.4.32',
+            kotlinVersion = '1.5.30',
             kotlinOptionsJvmTarget = '1.8'
     ]
 

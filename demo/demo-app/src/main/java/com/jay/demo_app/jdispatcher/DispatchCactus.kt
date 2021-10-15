@@ -6,7 +6,6 @@ import com.jay.android.dispatcher.annotation.Dispatch
 import com.jay.android.dispatcher.annotation.Priority
 import com.jay.android.dispatcher.common.DispatchItem
 import com.jay.android.dispatcher.dispatch.DispatchTemplate
-import com.jay.demo_app.cactus.ServiceConstants
 
 /**
  * @author jaydroid
@@ -20,6 +19,6 @@ import com.jay.demo_app.cactus.ServiceConstants
 class DispatchCactus : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
         super.onCreate(app, dispatchItem)
-        ServiceConstants.setCactus(app)
+
     }
 }

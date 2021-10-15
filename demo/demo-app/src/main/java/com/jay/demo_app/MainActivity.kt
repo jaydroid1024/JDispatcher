@@ -25,4 +25,5 @@ class MainActivity : AppCompatActivity() {
     fun goToOtherProcess(view: View) {
         startActivity(Intent(this, OtherProcessActivity::class.java))
     }
+
 }
