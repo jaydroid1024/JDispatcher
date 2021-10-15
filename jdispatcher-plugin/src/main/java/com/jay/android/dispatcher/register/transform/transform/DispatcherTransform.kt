@@ -67,7 +67,7 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
         super.beforeTransform()
         // 每个 Variant 都会执行一次 transform 方法，在 beforeTransform 时重新创建 ClassLoader，避免多个 Variant 中存在相同类时加载类异常
         groovyClassLoader = GroovyClassLoader()
-        project.extensions.getByName("android")
+
         val android = project.extensions.getByType(AppExtension::class.java)
         val androidBootClasspath = android.bootClasspath[0].toString()
         groovyClassLoader?.addClasspath(androidBootClasspath)

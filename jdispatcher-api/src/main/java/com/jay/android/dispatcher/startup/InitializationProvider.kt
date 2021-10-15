@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.RestrictTo
+import com.jay.android.dispatcher.common.Logger
 import com.jay.android.dispatcher.launcher.JDispatcher
 
 /**
@@ -19,6 +20,7 @@ import com.jay.android.dispatcher.launcher.JDispatcher
 class InitializationProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
+        Logger.debug("InitializationProvider-onCreate, context:$context")
         if (context != null) {
             JDispatcher.instance.init(context!!)
         } else {

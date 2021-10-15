@@ -13,7 +13,7 @@ dependencies {
 
     implementation project(':demo:demo-library-A')
     implementation project(':demo:demo-library-B')
-    implementation "androidx.startup:startup-runtime:1.0.0"
+
     implementation rootProject.ext.tracing
     implementation rootProject.ext.multidex
 
@@ -25,6 +25,10 @@ dependencies {
         implementation rootProject.ext.jdispatcherApi
         kapt rootProject.ext.jdispatcherCompiler
     }
+
+    //模拟多进程
+    implementation 'com.gyf.cactus:cactus:1.1.3-beta13'
+
 
 
 }

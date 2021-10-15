@@ -42,7 +42,7 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
         //手动延迟分发时忽略掉
         if (Dimension.isManual(dispatchItem.dimension)) {
             Logger.debug(
-                "isManual, name: " + dispatchItem.name
+                "isIgnoreDispatch-isManual, name: " + dispatchItem.name
                         + ", dimension: " + dispatchItem.dimension
                         + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
             )
@@ -51,7 +51,7 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
         //需要debug维度下分发的在release构建时忽略掉
         if (Dimension.isBuildDebug(dispatchItem.dimension) && !JDispatcher.instance.debuggable()) {
             Logger.debug(
-                "isBuildDebug, name: " + dispatchItem.name
+                "isIgnoreDispatch-isBuildDebug, name: " + dispatchItem.name
                         + ", dimension: " + dispatchItem.dimension
                         + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
             )
@@ -66,7 +66,7 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
             Dimension.isProcessOther(dispatchItem.dimension) && isMainProcess()
         ) {
             Logger.debug(
-                "isProcessMain, name: " + dispatchItem.name
+                "isIgnoreDispatch-Process, name: " + dispatchItem.name
                         + ", dimension: " + dispatchItem.dimension
                         + ", dimension str: " + Dimension.getDimensionStr(dispatchItem.dimension)
             )
@@ -110,9 +110,10 @@ class DispatchHelper(private val sortedDispatchList: List<DispatchItem>?) {
     private fun dispatchProviderOnCreate(dispatchItem: DispatchItem, context: Context) {
         //进程信息
         dispatchItem.processName = ApiUtils.getProcessName() ?: ""
-        dispatchItem.time = CommonUtils.time("${dispatchItem.name}#$METHOD_PROVIDER_ON_CREATE  ") {
+        val time = CommonUtils.time("${dispatchItem.name}#$METHOD_PROVIDER_ON_CREATE  ") {
             dispatchItem.instance?.onPreCreate(context, dispatchItem)
         }
+        dispatchItem.time = time
     }
 
     fun onCreate(

@@ -3,6 +3,7 @@ buildscript {
     //使用 config.gradle 统一管理项目的依赖库,依赖仓库，Gradle 自身依赖（classpath）等
     apply from: "buildgradle/config.gradle"
     repositories {
+        jcenter()
         mavenCentral()
         google()
         //仓库类型控制开关
@@ -25,6 +26,7 @@ buildscript {
 
 allprojects {
     repositories {
+        jcenter()
         mavenCentral()
         google()
         def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']

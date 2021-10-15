@@ -4,10 +4,48 @@
     package="com.jay.android.dispatcher">
 
     <application>
+        <!--
+        https://developer.android.com/guide/topics/manifest/provider-element
+        https://developer.android.com/studio/build/manifest-merge?hl=zh-cn
+        与 Activity 和 Service 组件类似，您必须使用 <provider> 元素，在清单文件中为其应用定义 ContentProvider 的子类。
+        Android 系统会从该元素获取以下信息：
+        授权 (android:authorities)：一个或多个 URI 授权方的列表，这些 URI 授权方用于标识内容提供程序提供的数据。列出多个授权方时，用分号将其名称分隔开来。
+        提供程序类名 ( android:name )：实现 ContentProvider 的类。
+        指定其他应用访问提供程序数据时所须的权限：
+        android:grantUriPermssions：临时权限标志。
+        android:permission：统一提供程序范围读取/写入权限。
+        android:readPermission：提供程序范围读取权限。
+        android:writePermission：提供程序范围写入权限
+        启动和控制属性：
+        android:enabled：系统是否可以实例化内容提供程序。如果可以，则设为“true”；如果不能，则设为“false”。默认值为“true”。
+        android:exported：内容提供程序是否可供其他应用使用：。
+        android:initOrder：在同一进程中，此提供程序相对于其他提供程序的启动顺序。
+        android:multiProcess：如果应用在多个进程中运行，则此属性决定了是否会创建内容提供程序的多个实例。如果设为 true，则每个应用进程都有自己的内容提供程序对象。如果设为 false，则应用的进程仅共享一个内容提供程序对象。默认值为 false。
+        android:process：一个进程的名称，内容提供程序应在该进程中运行。如果为此属性分配的名称以冒号（“:”）开头，则会在需要时创建一个应用专用的新进程，并且 Activity 将在该进程中运行。如果进程名称以小写字符开头，则 Activity 将在采用该名称的全局进程中运行，前提是它具有相应权限。
+        android:syncable：指示提供程序的数据将与服务器上的数据进行同步的标志。
+        信息属性：
+        android:icon：包含提供程序图标的可绘制对象资源。该图标会出现在应用列表 (Settings > Apps > All) 提供程序的标签旁边。
+        android:label：描述提供程序和/或其数据的信息标签。该标签会出现在应用列表 (Settings > Apps > All) 中。
+
+        可包含的标签：
+        <meta-data>：可以向父组件提供的其他任意数据项的名称值对。一个组件元素可以包含任意数量的 <meta-data> 子元素。所有这些子元素的值收集到一个 Bundle 对象，并且可作为 PackageItemInfo.metaData 字段提供给组件。
+        <grant-uri-permission>：指定父内容提供程序有权访问的应用数据的子集。
+        <path-permission>：定义内容提供程序中特定数据子集的路径和所需权限。
+
+        合并规则标记-节点标记：
+        如需对整个 XML 元素（给定清单元素中的所有属性及其所有子标记）应用合并规则，请使用以下属性：
+        tools:node="merge"：在没有冲突的情况下，使用合并冲突启发法合并此标记中的所有属性以及所有嵌套元素。这是元素的默认行为。
+        tools:node="merge-only-attributes"：仅合并此标记中的属性，不合并嵌套元素。
+        tools:node="remove"：从合并后的清单中移除此元素。
+        tools:node="removeAll"：与 tools:node="remove" 类似，但它会移除与此元素类型匹配的所有元素（同一父元素内）。
+        tools:node="replace"：完全替换优先级较低的元素。也就是说，如果优先级较低的清单中有匹配的元素，会将其忽略并完全按照此元素在此清单中显示的样子使用它。
+        tools:node="strict"：每当此元素在优先级较低的清单中与在优先级较高的清单中不完全匹配时，都会导致构建失败（除非已通过其他合并规则标记解决）。
+        -->
         <provider
             android:name=".startup.InitializationProvider"
             android:authorities="${applicationId}.dispatcher-startup"
             android:exported="false"
+            android:multiprocess="true"
             tools:node="merge" />
     </application>
 

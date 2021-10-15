@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jay.android.jdispatcher">
 
     <application
@@ -17,10 +18,25 @@
             </intent-filter>
         </activity>
 
+        <!--
+         android:process：一个进程的名称，如果为此属性分配的名称以冒号（“:”）开头，则会在需要时创建一个应用专用的新进程，并且 Activity 将在该进程中运行。
+         如果进程名称以小写字符开头，则 Activity 将在采用该名称的全局进程中运行，前提是它具有相应权限。
+
+        -->
         <activity
             android:name="com.jay.demo_app.OtherProcessActivity"
-            android:exported="true"
-            android:process=":other_process" />
+            android:exported="false"
+            android:process=".other_process" />
+
+
+        <!-- 替换默认JDispatcher配置 -->
+        <provider
+            android:name="com.jay.android.dispatcher.startup.InitializationProvider"
+            android:authorities="${applicationId}.dispatcher-startup"
+            android:exported="false"
+            android:multiprocess="true"
+            tools:node="replace" />
+
 
     </application>
 

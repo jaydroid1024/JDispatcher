@@ -1,11 +1,12 @@
-package com.jay.android.demo_library_b.jdispatcher
+package com.jay.demo_app.jdispatcher
 
 import android.app.Application
-import android.widget.Toast
 import com.jay.android.dispatcher.annotation.Dimension
 import com.jay.android.dispatcher.annotation.Dispatch
+import com.jay.android.dispatcher.annotation.Priority
 import com.jay.android.dispatcher.common.DispatchItem
 import com.jay.android.dispatcher.dispatch.DispatchTemplate
+import com.jay.demo_app.cactus.ServiceConstants
 
 /**
  * @author jaydroid
@@ -13,16 +14,12 @@ import com.jay.android.dispatcher.dispatch.DispatchTemplate
  * @date 5/31/21
  */
 @Dispatch(
-    name = "D_B_03",
-    priority = 30,
-    dependencies = ["D_B_02", "D_B_01"],
-    dimension = Dimension.DIMENSION_DEFAULT_MANUAL,
-    description = "组件B的03个Dispatch"
+    priority = Priority.LOW_DEFAULT,
+    dimension = Dimension.PROCESS_ALL or Dimension.THREAD_UI or Dimension.BUILD_ALL or Dimension.AUTOMATIC,
 )
-class Demo_Library_B_Dispatch_03 : DispatchTemplate() {
-
+class DispatchCactus : DispatchTemplate() {
     override fun onCreate(app: Application, dispatchItem: DispatchItem) {
         super.onCreate(app, dispatchItem)
-        Toast.makeText(app, "手动执行了：Demo_Library_B_Dispatch_03", Toast.LENGTH_LONG).show()
+        ServiceConstants.setCactus(app)
     }
 }

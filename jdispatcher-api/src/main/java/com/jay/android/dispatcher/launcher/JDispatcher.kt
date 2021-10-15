@@ -46,8 +46,16 @@ class JDispatcher private constructor() {
 
     /**
      * 通过ASM字节码注入的方法入口
-     * dispatchSortedJsonListFromPlugin.add("")
-     * dispatchSortedJsonListFromPlugin.add("")
+     * 字节码插桩代码如下：
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_A_04\",\"priority\":288,\"dimension\":394,\"className\":\"com.jay.android.demo_library_a.jdispatcher.Demo_Library_A_Dispatch_04\",\"dependencies\":[],\"description\":\"组件B的04个Dispatch\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_A_02\",\"priority\":110,\"dimension\":418,\"className\":\"com.jay.android.demo_library_a.jdispatcher.Demo_Library_A_Dispatch_02\",\"dependencies\":[],\"description\":\"组件B的02个Dispatch\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_B_01\",\"priority\":60,\"dimension\":394,\"className\":\"com.jay.android.demo_library_b.Demo_Library_B_Dispatch_01\",\"dependencies\":[\"D_A_02\"],\"description\":\"组件B的01个Dispatch change\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_B_02\",\"priority\":50,\"dimension\":394,\"className\":\"com.jay.android.demo_library_b.jdispatcher.Demo_Library_B_Dispatch_02\",\"dependencies\":[\"D_B_01\"],\"description\":\"组件B的02个Dispatch\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_B_03\",\"priority\":30,\"dimension\":650,\"className\":\"com.jay.android.demo_library_b.jdispatcher.Demo_Library_B_Dispatch_03\",\"dependencies\":[\"D_B_02\",\"D_B_01\"],\"description\":\"组件B的03个Dispatch\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_A_03\",\"priority\":19,\"dimension\":402,\"className\":\"com.jay.android.demo_library_a.jdispatcher.Demo_Library_A_Dispatch_03\",\"dependencies\":[],\"description\":\"组件B的03个Dispatch\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"com.jay.demo_app.jdispatcher.DispatcherStart\",\"priority\":17,\"dimension\":393,\"className\":\"com.jay.demo_app.jdispatcher.DispatcherStart\",\"dependencies\":[\"D_A_03\"],\"description\":\"DispatcherStart\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"com.jay.demo_app.DispatcherStart\",\"priority\":17,\"dimension\":393,\"className\":\"com.jay.demo_app.DispatcherStart\",\"dependencies\":[\"D_A_03\"],\"description\":\"DispatcherStart\"}");
+     * getDispatchSortedJsonListFromPlugin().add("{\"processName\":\"\",\"time\":0,\"name\":\"D_A_01\",\"priority\":10,\"dimension\":394,\"className\":\"com.jay.android.demo_library_a.jdispatcher.Demo_Library_A_Dispatch_01\",\"dependencies\":[],\"description\":\"组件 A 的01个Dispatch\"}");
      */
     fun registerDispatchSortedList() {
 
@@ -115,7 +123,6 @@ class JDispatcher private constructor() {
             dispatchItem?.let { dispatch ->
                 //反射获取 Dispatcher 实例
                 val dispatchItemClazz = try {
-                    Logger.debug("className:" + dispatch.className)
                     Class.forName(dispatch.className).getConstructor().newInstance()
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -264,6 +271,7 @@ class JDispatcher private constructor() {
         JDispatcher.application = application
         //init 在 InitializationProvider 已预先经初始化,这里考虑多进程的情况
         if (!hasInit || dispatchHelper == null) {
+            Logger.debug("onCreate init, hasInit:$hasInit dispatchHelper:$dispatchHelper")
             init(application)
         }
         val totalOnCreateTime = CommonUtils.timeStr("总的 onCreate ") {
@@ -341,6 +349,7 @@ class JDispatcher private constructor() {
 
         @JvmStatic
         val instance: JDispatcher by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { JDispatcher() }
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.jay.demo_app
+package com.jay.demo_app.jdispatcher
 
 import android.app.Application
 import android.content.res.Configuration
