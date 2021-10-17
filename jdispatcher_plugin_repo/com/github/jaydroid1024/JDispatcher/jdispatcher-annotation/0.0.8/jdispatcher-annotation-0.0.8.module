@@ -1,0 +1,90 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.jaydroid1024.JDispatcher",
+    "module": "jdispatcher-annotation",
+    "version": "0.0.8",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.7.1",
+      "buildId": "pilghnvz7ndljljhrjsmqo42g4"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.4.32"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "jdispatcher-annotation-0.0.8.jar",
+          "url": "jdispatcher-annotation-0.0.8.jar",
+          "size": 29094,
+          "sha512": "251280e5db3455b4ecfa81ba52b2adad249129e1411f314906d1e256678bcb024c180bd40c29b1343ead0f6c9f0d3857ebcc8a17c1d476c5c2f9d11dfa05b239",
+          "sha256": "2232c479611e2080f030bcf9ac8567b8aea2e6e643e072e6b5930df685b435c8",
+          "sha1": "c1a98e23a1fe0942601faac97ecf2efd709c19e3",
+          "md5": "6479a0c919bc4355d5e3d449d0d61ed3"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.code.gson",
+          "module": "gson",
+          "version": {
+            "requires": "2.8.5"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.4.32"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "jdispatcher-annotation-0.0.8.jar",
+          "url": "jdispatcher-annotation-0.0.8.jar",
+          "size": 29094,
+          "sha512": "251280e5db3455b4ecfa81ba52b2adad249129e1411f314906d1e256678bcb024c180bd40c29b1343ead0f6c9f0d3857ebcc8a17c1d476c5c2f9d11dfa05b239",
+          "sha256": "2232c479611e2080f030bcf9ac8567b8aea2e6e643e072e6b5930df685b435c8",
+          "sha1": "c1a98e23a1fe0942601faac97ecf2efd709c19e3",
+          "md5": "6479a0c919bc4355d5e3d449d0d61ed3"
+        }
+      ]
+    }
+  ]
+}

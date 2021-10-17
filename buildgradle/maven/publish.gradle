@@ -1,14 +1,5 @@
+apply plugin: 'maven-publish'
 println("--------${project.name}：Maven Publish Gradle--------")
-//仓库类型控制开关
-def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
-if (!currentMavenRepositoryTypeIsDev) {
-    apply plugin: 'com.github.dcendents.android-maven'
-    group = rootProject.ext.jdispatcherJitpackGroup
-    return
-}
-
-apply plugin: 'maven'
-
 //远程Maven仓库的URL Release
 def MAVEN_REPO_RELEASE_URL = rootProject.ext.mavenRepo['mavenRepoUrlRelease']
 //远程Maven仓库用户名
@@ -22,187 +13,98 @@ def ARTIFACT_ID = project.name
 // 版本号 每个组件都要指定
 def VERSION = rootProject.ext.jdispatcherPublishVersion
 //远程Maven仓库的URL
-def URL =  rootProject.ext.jdispatcherLocalRepo
-
+def URL = rootProject.ext.jdispatcherLocalRepo
 println("dependencies_path: $GROUP:$ARTIFACT_ID:$VERSION")
 println("URL: $URL")
 
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: rootProject.ext.jdispatcherLocalRepo) {
-                authentication(userName: USER_NAME, password: PASSWORD)
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                if (plugins.hasPlugin('android-library')) {
+                    from components.release
+                } else if (plugins.hasPlugin('java')) {
+                    from components.java
+                    jar.preserveFileTimestamps = false
+                    jar.reproducibleFileOrder = true
+                }
+                groupId = GROUP
+                artifactId = ARTIFACT_ID
+                version = VERSION
+//                artifact androidJavadocJar
+//                artifact javaSourcesJar
             }
-            // 唯一标识
-            pom.groupId = GROUP
-            // 项目名称
-            pom.artifactId = ARTIFACT_ID
-            // 版本号
-            pom.version = VERSION
+        }
+        repositories {
+            maven {
+                url = URL
+//                credentials {
+//                    username USER_NAME
+//                    password PASSWORD
+//                }
+            }
         }
     }
 }
 
+task androidJavadoc(type: Javadoc) {
+    if (plugins.hasPlugin('android-library')) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        android.libraryVariants.all { variant ->
+            if (variant.name == 'release') {
+                owner.classpath += variant.javaCompileProvider.get().classpath
+            }
+        }
+    } else {
+        source = sourceSets.main.allJava
+        classpath += configurations.runtimeClasspath
+        classpath += configurations.compileClasspath
+    }
+    exclude '**/R.html', '**/R.*.html', '**/index.html'
+    options.encoding 'utf-8'
+    options {
+        addStringOption 'docencoding', 'utf-8'
+        addStringOption 'charset', 'utf-8'
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+        links 'https://d.android.com/reference'
+        links 'https://developer.android.com/reference/androidx/'
+    }
+}
 
-//todo Caused by: org.gradle.api.InvalidUserDataException: Maven publication 'release' cannot include multiple components
+task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
+    archiveClassifier.set('javadoc')
+    from androidJavadoc.destinationDir
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
 
-// Because the components are created only during the afterEvaluate phase, you must
-// configure your publications using the afterEvaluate() lifecycle method.
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            // Creates a Maven publication called "release".
-//            release(MavenPublication) {
-//                // Applies the component for the release build variant.
-//                from components.release
-//
-//                // You can then customize attributes of the publication as shown below.
-//                groupId = GROUP
-//                artifactId = ARTIFACT_ID
-//                version = VERSION
-//            }
-//            // Creates a Maven publication called “debug”.
-//            debug(MavenPublication) {
-//                // Applies the component for the debug build variant.
-//                from components.debug
-//
-//                groupId = GROUP
-//                artifactId = ARTIFACT_ID
-//                version = VERSION
-//            }
-//        }
-//    }
-//}
+task javaSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (plugins.hasPlugin('android-library')) {
+        from android.sourceSets.main.java.srcDirs
+    } else {
+        from sourceSets.main.allSource
+    }
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
 
+//发布到本地仓库的任务
+task cleanBuildPublishLocal(type: GradleBuild) {
+    tasks = ['clean', 'build', 'publishToMavenLocal']
+}
 
-//todo 解决任务task已存在的问题
+//发布到远程仓库的任务
+task cleanBuildPublish(type: GradleBuild) {
+    tasks = ['clean', 'build', 'publish']
+}
 
-// 上传到公共仓库
-//task uploadToPublic(type: Upload) {
-//    println("=+++++++++++++++++++VERSION: uploadToPublic")
-//    group = 'upload'
-//    configuration = configurations.archives
-//    uploadDescriptor = true
-//    repositories {
-//        mavenDeployer {
-//            // 指定maven仓库url
-//            repository(url: URL) {
-//                // Nexus私服的账户密码
-//                authentication(userName: USER_NAME, password: PASSWORD)
-//            }
-//            // 唯一标识
-//            pom.groupId = GROUP
-//            // 项目名称
-//            pom.artifactId = ARTIFACT_ID
-//            // 版本号
-//            pom.version = VERSION
-//        }
-//    }
-//}
+//https://petrakeas.medium.com/publish-a-multi-module-java-android-library-to-maven-central-github-ci-automation-at-2021-4f98a311df2a
 
 
-//// type显示指定任务类型或任务, 这里指定要执行Javadoc这个task,这个task在gradle中已经定义
-//androidJavadocs(type: Javadoc) {
-//    // 设置源码所在的位置
-//    source = android.sourceSets.main.java.sourceFiles
-//}
-//
-//// 生成javadoc.jar
-//androidJavadocsJar(type: Jar) {
-//    // 指定文档名称
-//    classifier = 'javadoc'
-//    from androidJavadocs.destinationDir
-//}
-//
-//// 打包main目录下代码和资源的task，生成sources.jar
-//androidSourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from android.sourceSets.main.java.sourceFiles
-//}
-//
-////配置需要上传到maven仓库的文件
-//artifacts {
-//    archives androidSourcesJar
-//    archives androidJavadocsJar
-//}
 
 
-//
-//// 打包源码
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-//task javadoc(type: Javadoc) {
-//    failOnError  false
-//    source = android.sourceSets.main.java.sourceFiles
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    classpath += configurations.compile
-//}
-//
-//
-//// 制作文档(Javadoc)
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-////配置需要上传到maven仓库的文件
-//artifacts {
-//    archives sourcesJar
-//    archives javadocJar
-//}
-
-
-//// 上传到公共仓库
-//task uploadToPublic(type: Upload) {
-//    group = 'upload'
-//    configuration = configurations.archives
-//    uploadDescriptor = true
-//    repositories{
-//        mavenDeployer {
-//            repository(url: URL_PUCBLIC) {
-//                authentication(userName: USERNAME, password: PASSWORD)
-//            }
-//            pom.version = VERSION
-//            pom.artifactId = ARTIFACT_ID
-//            pom.groupId = GROUP_ID
-//        }
-//    }
-//}
-
-//// 上传到本机仓库
-//task uploadToLocal(type: Upload) {
-//    group = 'upload'
-//    configuration = configurations.archives
-//    uploadDescriptor = true
-//    repositories{
-//        mavenDeployer {
-//            repository(url: URL_LOCAL) {
-//                authentication(userName: USERNAME, password: PASSWORD)
-//            }
-//            pom.version = VERSION
-//            pom.artifactId = ARTIFACT_ID
-//            pom.groupId = GROUP_ID
-//        }
-//    }
-//}
-//
-//// 压缩生成归档文件
-//task pack(type: Zip) {
-//    group = 'pack'
-//    archiveName = rootProject.getRootDir().getName() + "_v" + VERSION + ".zip";
-//    destinationDir = rootProject.getRootDir().getParentFile();
-//    from rootProject.getRootDir().getAbsolutePath();
-//    exclude '**.zip'
-//    exclude '**.iml'
-//    exclude '**/**.iml'
-//    exclude 'build/**'
-//    exclude '.idea/**'
-//    exclude '.gradle/**'
-//    exclude 'gradle/**'
-//    exclude '**/build/**'
-//}
 
 

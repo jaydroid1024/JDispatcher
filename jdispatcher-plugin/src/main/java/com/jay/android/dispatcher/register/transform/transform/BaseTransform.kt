@@ -53,7 +53,6 @@ open class BaseTransform(val project: Project) : Transform() {
 
     @Throws(TransformException::class, InterruptedException::class, IOException::class)
     override fun transform(invocation: TransformInvocation) {
-        super.transform(invocation)
         beforeTransform()
         handleTransform(invocation)
         afterTransform()
@@ -62,7 +61,6 @@ open class BaseTransform(val project: Project) : Transform() {
     open fun afterTransform() {
         Logger.debug("afterTransform...")
         Logger.debug("dispatcherExtension" + dispatcherExtension.toString())
-
     }
 
     open fun beforeTransform() {

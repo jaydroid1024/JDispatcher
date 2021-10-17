@@ -74,7 +74,6 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
     }
 
     override fun handleTransform(invocation: TransformInvocation) {
-        super.handleTransform(invocation)
         logInfo["compile_date"] = timeFormat.format(Date())
         logInfo["transform_total_time"] = time("transform ") {
             try {
@@ -272,40 +271,41 @@ class DispatcherTransform(project: Project) : BaseTransform(project) {
      */
     private fun scan(invocation: TransformInvocation) {
         //封装扫描帮助类，统一处理增量编译和并发扫描的逻辑
-        val transformScanHelper = TransformScanHelper(invocation, project, groovyClassLoader,
-            object : TransformScanCallBack {
-                override fun processScan(
-                    className: String,
-                    classBytes: ByteArray?,
-                    dest: File
-                ): ByteArray? {
-                    val checkClassName: String = ClassUtils.path2Classname(className)
-                    if (dispatchGroupClassNameFilter.filter(checkClassName)) {
-                        dispatchClassSet.add(checkClassName)
-                        Logger.debug("Transform: dispatchGroupClassNameFilter, className = $className, checkClassName = $checkClassName")
-                        Logger.debug("Transform: dispatchGroupClassNameFilter, dest = ${dest.absolutePath}")
-                    }
-
-                    if (applicationClassNameFilter.filter(checkClassName)) {
-                        applicationClassName = checkClassName
-                        applicationClassFile = dest
-                        Logger.debug("Transform: applicationClassNameFilter, className = $className, checkClassName = $checkClassName")
-                        Logger.debug("Transform: applicationClassNameFilter, dest = ${dest.absolutePath}")
-                    }
-
-                    if (jDispatcherClassNameFilter.filter(checkClassName)) {
-                        jDispatcherClassName = checkClassName
-                        jDispatcherClassFile = dest
-                        Logger.debug("Transform: jDispatcherClassNameFilter, className = $className, checkClassName = $checkClassName")
-                        Logger.debug("Transform: jDispatcherClassNameFilter, dest = ${dest.absolutePath}")
-                    }
-                    return null
-                }
-            })
-
+        val transformScanHelper =
+            TransformScanHelper(invocation, project, groovyClassLoader, transformScanCallBack)
         //todo 进一步优化扫描时间
         transformScanHelper.openSimpleScan()
         transformScanHelper.startTransform()
+    }
+
+    val transformScanCallBack = object : TransformScanCallBack {
+        override fun processScan(
+            className: String,
+            classBytes: ByteArray?,
+            dest: File
+        ): ByteArray? {
+            val checkClassName: String = ClassUtils.path2Classname(className)
+            if (dispatchGroupClassNameFilter.filter(checkClassName)) {
+                dispatchClassSet.add(checkClassName)
+                Logger.debug("Transform: dispatchGroupClassNameFilter, className = $className, checkClassName = $checkClassName")
+                Logger.debug("Transform: dispatchGroupClassNameFilter, dest = ${dest.absolutePath}")
+            }
+
+            if (applicationClassNameFilter.filter(checkClassName)) {
+                applicationClassName = checkClassName
+                applicationClassFile = dest
+                Logger.debug("Transform: applicationClassNameFilter, className = $className, checkClassName = $checkClassName")
+                Logger.debug("Transform: applicationClassNameFilter, dest = ${dest.absolutePath}")
+            }
+
+            if (jDispatcherClassNameFilter.filter(checkClassName)) {
+                jDispatcherClassName = checkClassName
+                jDispatcherClassFile = dest
+                Logger.debug("Transform: jDispatcherClassNameFilter, className = $className, checkClassName = $checkClassName")
+                Logger.debug("Transform: jDispatcherClassNameFilter, dest = ${dest.absolutePath}")
+            }
+            return null
+        }
     }
 
 

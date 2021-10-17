@@ -61,12 +61,13 @@ class TransformScanHelper(
     fun startTransform() {
         try {
             Logger.debug("startTransform isIncremental: $isIncremental")
-            Logger.debug("startTransform outputProvider: $outputProvider")
 
             //非增量编译，清空输出目录
             if (!isIncremental) {
                 try {
                     outputProvider?.deleteAll()
+                    outputProvider?.
+                    Logger.debug("startTransform outputProvider deleteAll")
                 } catch (e: IOException) {
                     Logger.error(e.localizedMessage.toString())
                 }

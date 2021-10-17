@@ -1,0 +1,125 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.github.jaydroid1024.JDispatcher",
+    "module": "jdispatcher-plugin",
+    "version": "0.0.8",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.7.1",
+      "buildId": "hw4vo52375dmjmhfrqfvefxc2q"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.4.32"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "jdispatcher-plugin-0.0.8.jar",
+          "url": "jdispatcher-plugin-0.0.8.jar",
+          "size": 96032,
+          "sha512": "dcf8653c645948d59e43b72f4b62370297b63e48245122e09af0b1c38f5b1d8847dea8db798911396fc330c111f5115bf05e78da12efef9633d80b650cd400bf",
+          "sha256": "48fd67734a4561ddcc13a4e4d9aaa8cea7059fad92be3ddf4a593901676d4645",
+          "sha1": "408650b0ee36b2b8192b9f9bc5e5a2d662d0a7e5",
+          "md5": "78b3d5cad90f5421ea270f908eb78283"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "4.2.2"
+          }
+        },
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle-api",
+          "version": {
+            "requires": "4.2.2"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm",
+          "version": {
+            "requires": "7.1"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-util",
+          "version": {
+            "requires": "7.1"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-commons",
+          "version": {
+            "requires": "7.1"
+          }
+        },
+        {
+          "group": "com.github.jaydroid1024.JDispatcher",
+          "module": "jdispatcher-annotation",
+          "version": {
+            "requires": "0.0.8"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.4.32"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "jdispatcher-plugin-0.0.8.jar",
+          "url": "jdispatcher-plugin-0.0.8.jar",
+          "size": 96032,
+          "sha512": "dcf8653c645948d59e43b72f4b62370297b63e48245122e09af0b1c38f5b1d8847dea8db798911396fc330c111f5115bf05e78da12efef9633d80b650cd400bf",
+          "sha256": "48fd67734a4561ddcc13a4e4d9aaa8cea7059fad92be3ddf4a593901676d4645",
+          "sha1": "408650b0ee36b2b8192b9f9bc5e5a2d662d0a7e5",
+          "md5": "78b3d5cad90f5421ea270f908eb78283"
+        }
+      ]
+    }
+  ]
+}

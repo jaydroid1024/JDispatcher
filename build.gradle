@@ -6,13 +6,8 @@ buildscript {
         jcenter()
         mavenCentral()
         google()
-        //仓库类型控制开关
-        def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
-        if (currentMavenRepositoryTypeIsDev) {
-            maven { url rootProject.ext.jdispatcherLocalRepo }
-        } else {
-            maven { url "https://jitpack.io" }
-        }
+        maven { url rootProject.ext.jdispatcherLocalRepo }
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath rootProject.ext.androidGradle
@@ -29,12 +24,8 @@ allprojects {
         jcenter()
         mavenCentral()
         google()
-        def currentMavenRepositoryTypeIsDev = rootProject.ext.mavenRepo['currentMavenRepositoryTypeIsDev']
-        if (currentMavenRepositoryTypeIsDev) {
-            maven { url rootProject.ext.jdispatcherLocalRepo }
-        } else {
-            maven { url "https://jitpack.io" }
-        }
+        maven { url rootProject.ext.jdispatcherLocalRepo }
+        maven { url "https://jitpack.io" }
     }
 }
 
